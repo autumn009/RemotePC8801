@@ -5,8 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RemotePC8801"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        Closed="Window_Closed">
     <Grid>
-        
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Port Open" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonPortOpen" Click="ButtonPortOpen_Click"></Button>
+            <Button Content="Port Close" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonPortClose" Click="ButtonPortClose_Click"></Button>
+        </StackPanel>
+
+        <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,125" Width="110">Manual Command:</TextBlock>
+        <TextBox x:Name="TextBoxManualCommand" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="110,0,40,125"></TextBox>
+        <Button Content="Send" HorizontalAlignment="Right" Margin="0,0,0,125" VerticalAlignment="Bottom" x:Name="ButtonManualSend" Click="ButtonManualSend_Click"></Button>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,110">Echo backs</TextBlock>
+        <TextBox x:Name="TextBoxLog" IsReadOnly="True" HorizontalAlignment="Stretch" Height="100" VerticalAlignment="Bottom" Margin="0,0,0,10"></TextBox>
+        <ProgressBar HorizontalAlignment="Stretch" Height="10" VerticalAlignment="Bottom" IsIndeterminate="True" x:Name="MyProgress" />
     </Grid>
 </Window>
