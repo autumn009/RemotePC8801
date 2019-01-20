@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +28,10 @@ namespace RemotePC8801
             MyProgress.Visibility = Visibility.Hidden;
         }
 
+        private StringBuilder lastLineBuffer = new StringBuilder();
+        private StringBuilder currentLineBuffer = new StringBuilder();
+        private AutoResetEvent waiter = new AutoResetEvent(false);
+
         private void appendLog(string s)
         {
             TextBoxLog.Text += s;
@@ -37,7 +42,7 @@ namespace RemotePC8801
             await this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(
                 () =>
                 {
-                    if (ch >= 32 && ch < 255)
+                    if ((ch >= 32 && ch < 255)|| ch ==10 || ch == 13)
                     {
                         TextBoxLog.Text += new string(ch, 1);
                     }
@@ -62,6 +67,23 @@ namespace RemotePC8801
                     int ch = port.ReadChar();
                     if (ch == -1) return;
                     appendLog((char)ch);
+                    if (ch == 13)
+                    {
+                        // do nothing
+                    }
+                    else if (ch == 10)
+                    {
+                        lastLineBuffer = currentLineBuffer;
+                        currentLineBuffer = new StringBuilder();
+                        if( lastLineBuffer.ToString().StartsWith(":::"))
+                        {
+                            waiter.Set();
+                        }
+                    }
+                    else
+                    {
+                        currentLineBuffer.Append((char)ch);
+                    }
                 }
             }
             catch (Exception e)
@@ -100,6 +122,7 @@ namespace RemotePC8801
             try
             {
                 port.Write(s);
+                appendLog(s + "\n");
             }
             catch (Exception e)
             {
@@ -125,6 +148,33 @@ namespace RemotePC8801
         private void ButtonPortOpen_Click(object sender, RoutedEventArgs e)
         {
             portOpen();
+        }
+        private int getTargetDrive() => ComboDriveSelect.SelectedIndex + 1;
+
+        private async Task<int> sendCommand(string statement)
+        {
+            portOutput("\x1b<" + statement + ":print \":::\";ERR\r");
+            var r = await waitResult();
+            return r;
+        }
+
+        private async Task<int> waitResult()
+        {
+            return await Task.Run(() =>
+            {
+                waiter.Reset();
+                waiter.WaitOne();
+                var s = lastLineBuffer.ToString();
+                if (s.Length <= 3) return -1;
+                int.TryParse(s.Substring(3), out var r);
+                return r;
+            });
+        }
+
+        private async void ButtonFiles_Click(object sender, RoutedEventArgs e)
+        {
+            if (port == null) return;
+            await sendCommand($"files {getTargetDrive()}");
         }
     }
 }

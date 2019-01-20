@@ -11,13 +11,21 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="Port Open" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonPortOpen" Click="ButtonPortOpen_Click"></Button>
             <Button Content="Port Close" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonPortClose" Click="ButtonPortClose_Click"></Button>
+            <ComboBox SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="2" x:Name="ComboDriveSelect">
+                <ComboBoxItem>DRIVE1</ComboBoxItem>
+                <ComboBoxItem>DRIVE2</ComboBoxItem>
+                <ComboBoxItem>DRIVE3</ComboBoxItem>
+                <ComboBoxItem>DRIVE4</ComboBoxItem>
+            </ComboBox>
+            <Button Content="FILES" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonFiles" Click="ButtonFiles_Click"></Button>
+
         </StackPanel>
 
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,125" Width="110">Manual Command:</TextBlock>
         <TextBox x:Name="TextBoxManualCommand" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="110,0,40,125"></TextBox>
         <Button Content="Send" HorizontalAlignment="Right" Margin="0,0,0,125" VerticalAlignment="Bottom" x:Name="ButtonManualSend" Click="ButtonManualSend_Click"></Button>
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,110">Echo backs</TextBlock>
-        <TextBox x:Name="TextBoxLog" IsReadOnly="True" HorizontalAlignment="Stretch" Height="100" VerticalAlignment="Bottom" Margin="0,0,0,10"></TextBox>
+        <TextBox x:Name="TextBoxLog" IsReadOnly="True" HorizontalAlignment="Stretch" Height="100" VerticalAlignment="Bottom" Margin="0,0,0,10" TextWrapping="Wrap" FontFamily="MS Gothic"></TextBox>
         <ProgressBar HorizontalAlignment="Stretch" Height="10" VerticalAlignment="Bottom" IsIndeterminate="True" x:Name="MyProgress" />
     </Grid>
 </Window>
