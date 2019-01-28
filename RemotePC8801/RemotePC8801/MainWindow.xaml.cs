@@ -28,9 +28,15 @@ namespace RemotePC8801
             MyProgress.Visibility = Visibility.Hidden;
         }
 
+        enum ResultStatusMarker {
+            CommandEnd,
+            ShowResult
+        };
+
         private StringBuilder lastLineBuffer = new StringBuilder();
         private StringBuilder currentLineBuffer = new StringBuilder();
         private AutoResetEvent waiter = new AutoResetEvent(false);
+        private ResultStatusMarker result;
 
         private void appendLog(string s)
         {
@@ -75,8 +81,14 @@ namespace RemotePC8801
                     {
                         lastLineBuffer = currentLineBuffer;
                         currentLineBuffer = new StringBuilder();
-                        if( lastLineBuffer.ToString().StartsWith(":::"))
+                        if (lastLineBuffer.ToString().StartsWith(":::")) // result marker
                         {
+                            result = ResultStatusMarker.ShowResult;
+                            waiter.Set();
+                        }
+                        else if (lastLineBuffer.ToString() == "###")    // statement end marker
+                        {
+                            result = ResultStatusMarker.CommandEnd;
                             waiter.Set();
                         }
                     }
@@ -153,7 +165,13 @@ namespace RemotePC8801
 
         private async Task<int> sendCommand(string statement)
         {
-            portOutput("\x1b<" + statement + ":print \":::\";ERR\r");
+            //portOutput("\x1b<ERR=0:PRINT \"###\"\r");
+            //await waitResult();
+            portOutput("\x1b<abc\r\x1b<PRINT \"###\"\r");
+            await waitResult();
+            portOutput("\x1b<" + statement+ ":PRINT \"###\"\r");
+            await waitResult();
+            portOutput("\x1b<print \":::\";ERR\r");
             var r = await waitResult();
             return r;
         }
@@ -165,7 +183,7 @@ namespace RemotePC8801
                 waiter.Reset();
                 waiter.WaitOne();
                 var s = lastLineBuffer.ToString();
-                if (s.Length <= 3) return -1;
+                if (s.Length <= 3 || result != ResultStatusMarker.ShowResult) return -1;
                 int.TryParse(s.Substring(3), out var r);
                 return r;
             });

@@ -25,7 +25,7 @@
         <TextBox x:Name="TextBoxManualCommand" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="110,0,40,125"></TextBox>
         <Button Content="Send" HorizontalAlignment="Right" Margin="0,0,0,125" VerticalAlignment="Bottom" x:Name="ButtonManualSend" Click="ButtonManualSend_Click"></Button>
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,110">Echo backs</TextBlock>
-        <TextBox x:Name="TextBoxLog" IsReadOnly="True" HorizontalAlignment="Stretch" Height="100" VerticalAlignment="Bottom" Margin="0,0,0,10" TextWrapping="Wrap" FontFamily="MS Gothic"></TextBox>
+        <TextBox x:Name="TextBoxLog" IsReadOnly="True" HorizontalAlignment="Stretch" Height="100" VerticalAlignment="Bottom" Margin="0,0,0,10" TextWrapping="Wrap" FontFamily="MS Gothic"  VerticalScrollBarVisibility="Auto"></TextBox>
         <ProgressBar HorizontalAlignment="Stretch" Height="10" VerticalAlignment="Bottom" IsIndeterminate="True" x:Name="MyProgress" />
     </Grid>
 </Window>
