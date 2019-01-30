@@ -71,6 +71,8 @@ namespace RemotePC8801
                 {
                     if (port == null) return;
                     int ch = port.ReadChar();
+                    //System.Diagnostics.Debug.Write("!");
+
                     if (ch == -1) return;
                     appendLog((char)ch);
                     if (ch == 13)
@@ -113,6 +115,7 @@ namespace RemotePC8801
                 port.Open();
                 port.DtrEnable = true;
                 port.RtsEnable = true;
+                port.Handshake = Handshake.XOnXOff;
                 portWatcher = Task.Run((Action)watcherTask);
             }
             catch (Exception e)
@@ -167,10 +170,12 @@ namespace RemotePC8801
         {
             //portOutput("\x1b<ERR=0:PRINT \"###\"\r");
             //await waitResult();
-            portOutput("\x1b<abc\r\x1b<PRINT \"###\"\r");
-            await waitResult();
-            portOutput("\x1b<" + statement+ ":PRINT \"###\"\r");
-            await waitResult();
+            //portOutput("\x1b<abc\r\x1b<PRINT \"###\"\r");
+            //await waitResult();
+            //portOutput("\x1b<" + statement+ "\r");
+            //await waitResult();
+            portOutput("\x1b<" + statement + "\r");
+            //await waitResult();
             portOutput("\x1b<print \":::\";ERR\r");
             var r = await waitResult();
             return r;
