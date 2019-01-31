@@ -26,7 +26,13 @@
         </StackPanel>
 
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,125" Width="110">Manual Command:</TextBlock>
-        <TextBox x:Name="TextBoxManualCommand" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="110,0,40,125"></TextBox>
+        <ComboBox SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="110,0,40,125" Width="80" x:Name="ComboManualMode">
+            <ComboBoxItem>REMOTE</ComboBoxItem>
+            <ComboBoxItem>SILENT</ComboBoxItem>
+            <ComboBoxItem>LOCAL</ComboBoxItem>
+        </ComboBox>
+
+        <TextBox x:Name="TextBoxManualCommand" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="195,0,40,125"></TextBox>
         <Button Content="Send" HorizontalAlignment="Right" Margin="0,0,0,125" VerticalAlignment="Bottom" x:Name="ButtonManualSend" Click="ButtonManualSend_Click"></Button>
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,110">Echo backs</TextBlock>
         <TextBox x:Name="TextBoxLog" IsReadOnly="True" HorizontalAlignment="Stretch" Height="100" VerticalAlignment="Bottom" Margin="0,0,0,10" TextWrapping="Wrap" FontFamily="MS Gothic"  VerticalScrollBarVisibility="Auto"></TextBox>

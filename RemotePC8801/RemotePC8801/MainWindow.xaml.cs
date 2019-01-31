@@ -184,7 +184,17 @@ namespace RemotePC8801
 
         private void ButtonManualSend_Click(object sender, RoutedEventArgs e)
         {
-            portOutput("\x1b<" + TextBoxManualCommand.Text + "\r");
+            string cmd = "<";
+            switch (ComboManualMode.SelectedIndex)
+            {
+                case 1:
+                    cmd = ".";
+                    break;
+                case 2:
+                    cmd = ">";
+                    break;
+            }
+            portOutput("\x1b" + cmd + TextBoxManualCommand.Text + "\r");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
