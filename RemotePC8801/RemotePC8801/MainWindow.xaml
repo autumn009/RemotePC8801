@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:RemotePC8801"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
+        Loaded="Window_Loaded"
         Closed="Window_Closed">
     <Grid>
         <StackPanel Orientation="Horizontal">

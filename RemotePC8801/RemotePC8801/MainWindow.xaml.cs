@@ -145,11 +145,41 @@ namespace RemotePC8801
             }
         }
 
+        static private void enumVisual(Visual myVisual, Action<Visual> act)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(myVisual); i++)
+            {
+                // Retrieve child visual at specified index value.
+                Visual childVisual = (Visual)VisualTreeHelper.GetChild(myVisual, i);
+
+                // Do processing of the child visual object.
+                act(childVisual);
+
+                // Enumerate children of the child visual object.
+                enumVisual(childVisual, act);
+            }
+        }
+
+        private void setEnables(bool isOpen)
+        {
+            enumVisual(this, (visual) => {
+                var button = visual as Button;
+                if (button == null) return;
+                button.IsEnabled = isOpen;
+            });
+            ButtonPortOpen.IsEnabled = !isOpen;
+            ButtonPortClose.IsEnabled = isOpen;
+        }
+
         private void ButtonManualSend_Click(object sender, RoutedEventArgs e)
         {
             portOutput("\x1b<" + TextBoxManualCommand.Text + "\r");
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            setEnables(false);
+        }
         private void Window_Closed(object sender, EventArgs e)
         {
             portClose();
@@ -158,11 +188,13 @@ namespace RemotePC8801
         private void ButtonPortClose_Click(object sender, RoutedEventArgs e)
         {
             portClose();
+            setEnables(false);
         }
 
         private void ButtonPortOpen_Click(object sender, RoutedEventArgs e)
         {
             portOpen();
+            setEnables(true);
         }
         private int getTargetDrive() => ComboDriveSelect.SelectedIndex + 1;
 
