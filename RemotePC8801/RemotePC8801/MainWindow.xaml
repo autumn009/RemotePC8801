@@ -12,6 +12,9 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="Port Open" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonPortOpen" Click="ButtonPortOpen_Click"></Button>
             <Button Content="Port Close" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonPortClose" Click="ButtonPortClose_Click"></Button>
+            <Border x:Name="BorderOpenClose" Background="Black" BorderThickness="2" BorderBrush="Gray" VerticalAlignment="Top" Width="50">
+                <TextBlock x:Name="TextBlockOpenClose" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="white" Background="Black" FontWeight="Bold" >Open/Close</TextBlock>
+            </Border>
             <ComboBox SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="2" x:Name="ComboDriveSelect">
                 <ComboBoxItem>DRIVE1</ComboBoxItem>
                 <ComboBoxItem>DRIVE2</ComboBoxItem>

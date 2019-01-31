@@ -25,7 +25,6 @@ namespace RemotePC8801
         public MainWindow()
         {
             InitializeComponent();
-            MyProgress.Visibility = Visibility.Hidden;
         }
 
         enum ResultStatusMarker {
@@ -123,6 +122,7 @@ namespace RemotePC8801
                 port = null;
                 appendLog(e.ToString());
             }
+            updateOpenCloseStatus();
         }
 
         private void portClose()
@@ -130,6 +130,8 @@ namespace RemotePC8801
             if (port == null) return;
             port.Close();
             port.Dispose();
+            port = null;
+            updateOpenCloseStatus();
         }
 
         private void portOutput(string s)
@@ -171,6 +173,15 @@ namespace RemotePC8801
             ButtonPortClose.IsEnabled = isOpen;
         }
 
+        private void updateOpenCloseStatus()
+        {
+            bool isOpen = port != null;
+            TextBlockOpenClose.Text = isOpen ? "OPEN" : "CLOSE";
+            TextBlockOpenClose.Foreground = new SolidColorBrush(isOpen ? Colors.Green : Colors.Red);
+            BorderOpenClose.BorderBrush = TextBlockOpenClose.Foreground;
+        }
+
+
         private void ButtonManualSend_Click(object sender, RoutedEventArgs e)
         {
             portOutput("\x1b<" + TextBoxManualCommand.Text + "\r");
@@ -178,7 +189,9 @@ namespace RemotePC8801
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            MyProgress.Visibility = Visibility.Hidden;
             setEnables(false);
+            updateOpenCloseStatus();
         }
         private void Window_Closed(object sender, EventArgs e)
         {
