@@ -28,21 +28,30 @@ namespace RemotePC8801
         private const string Sixteen = "0123456789ABCDEF";
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            var topRow = new TableRow();
-            topRow.Cells.Add(new TableCell(new Paragraph(new Run("⌐"))));
-            MyTableRowGroup.Rows.Add(topRow);
-            foreach (var item in Sixteen) topRow.Cells.Add(new TableCell(new Paragraph(new Run(item.ToString()))));
-            foreach (var item in Sixteen)
+            for (int i = 0; i < 16; i++)
             {
-                var row = new TableRow();
-                row.Cells.Add(new TableCell(new Paragraph(new Run(item.ToString()))));
-                for (int i = 0; i < 16; i++)
+                var tb = new TextBlock(new Run(Sixteen[i].ToString()));
+                Grid.SetColumn(tb, i + 1);
+                Grid.SetRow(tb, 0);
+                MainGrid.Children.Add(tb);
+                var tb2 = new TextBlock(new Run(Sixteen[i].ToString()));
+                Grid.SetColumn(tb2, 0);
+                Grid.SetRow(tb2, i+1);
+                MainGrid.Children.Add(tb2);
+            }
+
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
                 {
-                    var run = new Run("XY");
-                    //run.Name = $"table{i.ToString()}{item}";
-                    row.Cells.Add(new TableCell(new Paragraph(run)));
+                    var tb = new TextBox();
+                    tb.Text = "XX";
+                    tb.IsReadOnly = true;
+                    tb.Name = $"table{Sixteen[x]}{Sixteen[y]}";
+                    Grid.SetColumn(tb, x + 1);
+                    Grid.SetRow(tb, y + 1);
+                    MainGrid.Children.Add(tb);
                 }
-                MyTableRowGroup.Rows.Add(row);
             }
         }
     }

@@ -8,26 +8,45 @@
       Title="PageSector"
       Loaded="Page_Loaded">
 
-    <FlowDocument>
-        <Table x:Name="MyTable">
-            <Table.Columns>
-                <TableColumn Width="20" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-                <TableColumn Width="40" />
-            </Table.Columns>
-            <TableRowGroup x:Name="MyTableRowGroup">
-            </TableRowGroup>
-        </Table>
-    </FlowDocument>
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+    </Grid>
+    
 </Page>
