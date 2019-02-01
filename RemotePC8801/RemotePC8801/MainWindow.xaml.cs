@@ -140,7 +140,7 @@ namespace RemotePC8801
             updateOpenCloseStatus();
         }
 
-        private void portOutput(string s)
+        public void portOutput(string s)
         {
             try
             {
@@ -185,22 +185,6 @@ namespace RemotePC8801
             TextBlockOpenClose.Text = isOpen ? "OPEN" : "CLOSE";
             TextBlockOpenClose.Foreground = new SolidColorBrush(isOpen ? Colors.Green : Colors.Red);
             BorderOpenClose.BorderBrush = TextBlockOpenClose.Foreground;
-        }
-
-
-        private void ButtonManualSend_Click(object sender, RoutedEventArgs e)
-        {
-            string cmd = "<";
-            switch (ComboManualMode.SelectedIndex)
-            {
-                case 1:
-                    cmd = ".";
-                    break;
-                case 2:
-                    cmd = ">";
-                    break;
-            }
-            portOutput("\x1b" + cmd + TextBoxManualCommand.Text + "\r");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
