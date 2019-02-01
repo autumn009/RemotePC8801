@@ -22,8 +22,16 @@
                 <ComboBoxItem>DRIVE4</ComboBoxItem>
             </ComboBox>
             <Button Content="FILES" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonFiles" Click="ButtonFiles_Click"></Button>
+            <Button Content="SECT" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonSectors" Click="ButtonSectors_Click"></Button>
+            <Button Content="DIRECT" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonDirect" Click="ButtonDirect_Click"></Button>
 
         </StackPanel>
+
+        <Border BorderThickness="2" BorderBrush="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,25,0,146">
+            <Frame Background="AliceBlue" x:Name="MainFrame">
+            
+            </Frame>
+        </Border>
 
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,125" Width="110">Manual Command:</TextBlock>
         <ComboBox SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="110,0,40,125" Width="80" x:Name="ComboManualMode">

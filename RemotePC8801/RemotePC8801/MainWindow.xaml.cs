@@ -25,7 +25,13 @@ namespace RemotePC8801
         public MainWindow()
         {
             InitializeComponent();
+            _navi = this.MainFrame.NavigationService;
         }
+
+        private Uri pageStart = new Uri("PageStart.xaml", UriKind.Relative);
+        private Uri pageDirectCommand = new Uri("PageDirectCommand.xaml", UriKind.Relative);
+
+        private NavigationService _navi;
 
         enum ResultStatusMarker {
             CommandEnd,
@@ -202,6 +208,7 @@ namespace RemotePC8801
             MyProgress.Visibility = Visibility.Hidden;
             setEnables(false);
             updateOpenCloseStatus();
+            _navi.Navigate(pageStart);
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -253,6 +260,16 @@ namespace RemotePC8801
         {
             if (port == null) return;
             await sendCommand($"files {getTargetDrive()}");
+        }
+
+        private void ButtonSectors_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonDirect_Click(object sender, RoutedEventArgs e)
+        {
+            _navi.Navigate(pageDirectCommand);
         }
     }
 }
