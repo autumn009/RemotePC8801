@@ -71,6 +71,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PageSector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PageStart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -79,6 +83,9 @@
   <ItemGroup>
     <Compile Include="PageDirectCommand.xaml.cs">
       <DependentUpon>PageDirectCommand.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PageSector.xaml.cs">
+      <DependentUpon>PageSector.xaml</DependentUpon>
     </Compile>
     <Compile Include="PageStart.xaml.cs">
       <DependentUpon>PageStart.xaml</DependentUpon>

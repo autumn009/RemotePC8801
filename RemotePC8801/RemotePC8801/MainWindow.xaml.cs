@@ -30,6 +30,7 @@ namespace RemotePC8801
 
         private Uri pageStart = new Uri("PageStart.xaml", UriKind.Relative);
         private Uri pageDirectCommand = new Uri("PageDirectCommand.xaml", UriKind.Relative);
+        private Uri pageSector = new Uri("PageSector.xaml", UriKind.Relative);
 
         private NavigationService _navi;
 
@@ -248,7 +249,7 @@ namespace RemotePC8801
 
         private void ButtonSectors_Click(object sender, RoutedEventArgs e)
         {
-
+            _navi.Navigate(pageSector);
         }
 
         private void ButtonDirect_Click(object sender, RoutedEventArgs e)

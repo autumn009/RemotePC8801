@@ -1,0 +1,33 @@
+﻿<Page x:Class="RemotePC8801.PageSector"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RemotePC8801"
+      mc:Ignorable="d" d:DesignWidth="800"
+      Title="PageSector"
+      Loaded="Page_Loaded">
+
+    <FlowDocument>
+        <Table x:Name="MyTable">
+            <Table.Columns>
+                <TableColumn Width="20" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+                <TableColumn Width="40" />
+            </Table.Columns>
+            <TableRowGroup x:Name="MyTableRowGroup">
+            </TableRowGroup>
+        </Table>
+    </FlowDocument>
+</Page>

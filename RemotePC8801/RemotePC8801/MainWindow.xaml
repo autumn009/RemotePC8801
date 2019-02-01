@@ -28,7 +28,7 @@
         </StackPanel>
 
         <Border BorderThickness="2" BorderBrush="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,25,0,125">
-            <Frame Background="AliceBlue" x:Name="MainFrame">
+            <Frame Background="AliceBlue" x:Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             
             </Frame>
         </Border>
