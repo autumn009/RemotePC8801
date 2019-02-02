@@ -54,5 +54,29 @@ namespace RemotePC8801
                 }
             }
         }
+
+        private async void ButtonRead_Click(object sender, RoutedEventArgs e)
+        {
+            int.TryParse(TextBoxTrack.Text, out int track);
+            int.TryParse(TextBoxSector.Text, out int sector);
+            if (await Util.SendCommandAsyncAndErrorHandle("FIELD #0,128 AS A$(0), 128 AS A$(1)")) return;
+            if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})")) return;
+            //if (await Util.SendCommandAsyncAndErrorHandle("PRINT asc(A$(0)), asc(A$(1))")) return;
+        }
+
+        private void ButtonPrev_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonNext_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonWrite_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

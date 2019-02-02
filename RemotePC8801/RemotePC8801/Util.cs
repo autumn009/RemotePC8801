@@ -15,7 +15,15 @@ namespace RemotePC8801
 
         public static void AppendLog(string msg) => MyMainWindow?.AppendLog(msg);
 
-        public async Task<int> SendCommandAsync(string statement) => await MyMainWindow?.SendCommandAsync(statement);
+        public static async Task<int> SendCommandAsync(string statement) => await MyMainWindow?.SendCommandAsync(statement);
+
+        public static async Task<bool> SendCommandAsyncAndErrorHandle(string statement)
+        {
+            var errorCode = await MyMainWindow?.SendCommandAsync(statement);
+            if (errorCode == 0) return false;
+            AppendLog($"\"{statement}\" FAILED, ERROR CODE={errorCode}\r\n");
+            return true;
+        }
 
         static public void EnumVisual(Visual myVisual, Action<Visual> act)
         {
