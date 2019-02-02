@@ -44,12 +44,19 @@ namespace RemotePC8801
         private AutoResetEvent waiter = new AutoResetEvent(false);
         private ResultStatusMarker result;
 
-        private void appendLog(string s)
+        public void AppendLog(string s) => TextBoxLog.Text += s;
+
+        private async Task appendLogFromWorkerThread(string s)
         {
-            TextBoxLog.Text += s;
+            await this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(
+                () =>
+                {
+                    TextBoxLog.Text += s;
+                })
+            );
         }
 
-        private async void appendLog(char ch)
+        private async Task appendLogFromWorkerThread(char ch)
         {
             await this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(
                 () =>
@@ -69,7 +76,9 @@ namespace RemotePC8801
         private SerialPort port;    // current COM port
         private Task portWatcher;    // another task
 
-        private void watcherTask()
+        public bool IsPortOpen => port != null;
+
+        private async void watcherTask()
         {
             try
             {
@@ -80,7 +89,7 @@ namespace RemotePC8801
                     //System.Diagnostics.Debug.Write("!");
 
                     if (ch == -1) return;
-                    appendLog((char)ch);
+                    await appendLogFromWorkerThread((char)ch);
                     if (ch == 13)
                     {
                         // do nothing
@@ -108,7 +117,7 @@ namespace RemotePC8801
             }
             catch (Exception e)
             {
-                //appendLog(e.ToString());
+                await appendLogFromWorkerThread(e.ToString());
             }
         }
 
@@ -127,7 +136,7 @@ namespace RemotePC8801
             catch (Exception e)
             {
                 port = null;
-                appendLog(e.ToString());
+                AppendLog(e.ToString());
             }
             updateOpenCloseStatus();
         }
@@ -146,32 +155,18 @@ namespace RemotePC8801
             try
             {
                 port.Write(s);
-                appendLog(s + "\n");
+                AppendLog(s + "\n");
             }
             catch (Exception e)
             {
-                appendLog(e.ToString());
+                AppendLog(e.ToString());
             }
         }
 
-        static private void enumVisual(Visual myVisual, Action<Visual> act)
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(myVisual); i++)
-            {
-                // Retrieve child visual at specified index value.
-                Visual childVisual = (Visual)VisualTreeHelper.GetChild(myVisual, i);
-
-                // Do processing of the child visual object.
-                act(childVisual);
-
-                // Enumerate children of the child visual object.
-                enumVisual(childVisual, act);
-            }
-        }
 
         private void setEnables(bool isOpen)
         {
-            enumVisual(this, (visual) => {
+            Util.EnumVisual(this, (visual) => {
                 var button = visual as Button;
                 if (button == null) return;
                 button.IsEnabled = isOpen;
@@ -213,16 +208,10 @@ namespace RemotePC8801
         }
         private int getTargetDrive() => ComboDriveSelect.SelectedIndex + 1;
 
-        private async Task<int> sendCommand(string statement)
+        public async Task<int> SendCommandAsync(string statement)
         {
-            //portOutput("\x1b<ERR=0:PRINT \"###\"\r");
-            //await waitResult();
-            //portOutput("\x1b<abc\r\x1b<PRINT \"###\"\r");
-            //await waitResult();
-            //portOutput("\x1b<" + statement+ "\r");
-            //await waitResult();
+            if (port == null) return -1;
             portOutput("\x1b<" + statement + "\r");
-            //await waitResult();
             portOutput("\x1b<print \":::\";ERR\r");
             var r = await waitResult();
             return r;
@@ -244,7 +233,7 @@ namespace RemotePC8801
         private async void ButtonFiles_Click(object sender, RoutedEventArgs e)
         {
             if (port == null) return;
-            await sendCommand($"files {getTargetDrive()}");
+            await SendCommandAsync($"files {getTargetDrive()}");
         }
 
         private void ButtonSectors_Click(object sender, RoutedEventArgs e)
