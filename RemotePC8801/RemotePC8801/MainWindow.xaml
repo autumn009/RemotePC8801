@@ -24,6 +24,7 @@
             <Button Content="FILES" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonFiles" Click="ButtonFiles_Click"></Button>
             <Button Content="SECT" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonSectors" Click="ButtonSectors_Click"></Button>
             <Button Content="DIRECT" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonDirect" Click="ButtonDirect_Click"></Button>
+            <Button Content="DEBUG" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonDebug" Click="ButtonDebug_Click"></Button>
 
         </StackPanel>
 

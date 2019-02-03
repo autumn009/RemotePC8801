@@ -34,7 +34,8 @@ namespace RemotePC8801
 
         private NavigationService _navi;
 
-        enum ResultStatusMarker {
+        enum ResultStatusMarker
+        {
             CommandEnd,
             ShowResult
         };
@@ -44,7 +45,12 @@ namespace RemotePC8801
         private AutoResetEvent waiter = new AutoResetEvent(false);
         private ResultStatusMarker result;
 
-        public void AppendLog(string s) => TextBoxLog.Text += s;
+        public void AppendLog(string s)
+        {
+            TextBoxLog.Text += s;
+            TextBoxLog.Select(TextBoxLog.Text.Length - 2, TextBoxLog.Text.Length - 1);
+            //TextBoxLog.SelectAll();
+        }
 
         private async Task appendLogFromWorkerThread(string s)
         {
@@ -61,7 +67,7 @@ namespace RemotePC8801
             await this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(
                 () =>
                 {
-                    if ((ch >= 32 && ch < 255)|| ch ==10 || ch == 13)
+                    if ((ch >= 32 && ch < 255) || ch == 10 || ch == 13)
                     {
                         TextBoxLog.Text += new string(ch, 1);
                     }
@@ -130,7 +136,7 @@ namespace RemotePC8801
                 port.Open();
                 port.DtrEnable = true;
                 port.RtsEnable = true;
-                port.Handshake = Handshake.XOnXOff;
+                port.Handshake = Handshake.RequestToSendXOnXOff;
                 portWatcher = Task.Run((Action)watcherTask);
             }
             catch (Exception e)
@@ -166,7 +172,8 @@ namespace RemotePC8801
 
         private void setEnables(bool isOpen)
         {
-            Util.EnumVisual(this, (visual) => {
+            Util.EnumVisual(this, (visual) =>
+            {
                 var button = visual as Button;
                 if (button == null) return;
                 button.IsEnabled = isOpen;
@@ -213,6 +220,7 @@ namespace RemotePC8801
             if (port == null) return -1;
             portOutput("\x1b<" + statement + "\r");
             portOutput("\x1b<print \":::\";ERR\r");
+            //port.BaseStream.Flush();
             var r = await waitResult();
             return r;
         }
@@ -244,6 +252,22 @@ namespace RemotePC8801
         private void ButtonDirect_Click(object sender, RoutedEventArgs e)
         {
             _navi.Navigate(pageDirectCommand);
+        }
+
+        private async void ButtonDebug_Click(object sender, RoutedEventArgs e)
+        {
+            await Task.Run(async () =>
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        portOutput("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+                    });
+                    await Task.Delay(1000);
+                }
+            });
         }
     }
 }
