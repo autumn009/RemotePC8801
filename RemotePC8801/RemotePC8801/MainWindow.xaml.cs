@@ -215,10 +215,13 @@ namespace RemotePC8801
         }
         private int getTargetDrive() => ComboDriveSelect.SelectedIndex + 1;
 
-        public async Task<int> SendCommandAsync(string statement)
+        public async Task<int> SendCommandAsync(string statement, bool forceHandshake = false)
         {
             if (port == null) return -1;
-            portOutput("\x1b<" + statement + "\r");
+            var append = "";
+            if( forceHandshake )append = ":PRINT \"###\"";
+            portOutput("\x1b<" + statement +append+ "\r");
+            if( forceHandshake) await waitResult();
             portOutput("\x1b<print \":::\";ERR\r");
             //port.BaseStream.Flush();
             var r = await waitResult();
