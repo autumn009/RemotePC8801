@@ -19,6 +19,12 @@ namespace RemotePC8801
 
         public static async Task<bool> SendCommandAsyncAndErrorHandle(string statement, bool forceHandshake = false)
         {
+            var errorCode0 = await MyMainWindow?.SendCommandAsync("poke &he649,0"); // clear ERR
+            if (errorCode0 != 0)
+            {
+                AppendLog($"\"poke &he649,0\" FAILED, ERROR CODE={errorCode0}\r\n");
+                return true;
+            }
             var errorCode = await MyMainWindow?.SendCommandAsync(statement, forceHandshake);
             if (errorCode == 0) return false;
             AppendLog($"\"{statement}\" FAILED, ERROR CODE={errorCode}\r\n");

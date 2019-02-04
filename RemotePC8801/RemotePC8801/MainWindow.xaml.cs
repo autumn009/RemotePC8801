@@ -48,6 +48,7 @@ namespace RemotePC8801
 
         private StringBuilder lastLineBuffer = new StringBuilder();
         private StringBuilder currentLineBuffer = new StringBuilder();
+        private string statementReaultString = null;
         private AutoResetEvent waiter = new AutoResetEvent(false);
         private ResultStatusMarker result;
 
@@ -126,6 +127,10 @@ namespace RemotePC8801
                         {
                             result = ResultStatusMarker.CommandEnd;
                             waiter.Set();
+                        }
+                        else if (lastLineBuffer.ToString().StartsWith("%%%"))    // statement result marker
+                        {
+                            statementReaultString = lastLineBuffer.ToString().Substring(3);
                         }
                         else if (lastLineBuffer.ToString() == confirmationString)    // confirmationString
                         {
@@ -257,6 +262,12 @@ namespace RemotePC8801
                     AppendLog($"Communication Failed.[{ Util.GetErrorString(r) }] Please verify your environment. Closing Port\r\n");
                     portClose();
                 }
+                var r2 = await getN88Version();
+                if (!r2)
+                {
+                    AppendLog($"Version {statementReaultString}\r\n");
+                    setEnables(true);
+                }
             }
         }
         private int getTargetDrive() => ComboDriveSelect.SelectedIndex + 1;
@@ -282,6 +293,13 @@ namespace RemotePC8801
             return await waitResult();
         }
 
+        private async Task<bool> getN88Version()
+        {
+            if (port == null) return false;
+            return await Util.SendCommandAsyncAndErrorHandle("print \"%%%\"+chr$(peek(&h79d5))+chr$(peek(&h79d6))+chr$(peek(&h79d7))\r");
+        }
+        
+
         private const int defaultTimeoutMilliSecond = 5000;
 
         private async Task<ResultStatusMarker> waitResult(int? timeout = null)
@@ -305,6 +323,8 @@ namespace RemotePC8801
                 var s = lastLineBuffer.ToString();
                 if (s.Length <= 3 || result != ResultStatusMarker.ShowResult) return result;
                 int.TryParse(s.Substring(3), out var r);
+                // 255 by "error 255". It means "no error".
+                //if (r == 255) r = 0;
                 return (ResultStatusMarker)r;
             });
         }
