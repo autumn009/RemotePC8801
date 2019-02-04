@@ -61,10 +61,8 @@ namespace RemotePC8801
                     var index = TextBoxLog.Text.IndexOf("\r\n");
                     if (index >= 0) TextBoxLog.Text = TextBoxLog.Text.Substring(index + 2);
                 }
+                TextBoxLog.ScrollToEnd();
             }
-
-            //TextBoxLog.Select(TextBoxLog.Text.Length - 2, TextBoxLog.Text.Length - 1);
-            //TextBoxLog.SelectAll();
         }
 
         private async Task appendLogFromWorkerThread(string s)
