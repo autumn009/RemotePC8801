@@ -153,6 +153,7 @@ namespace RemotePC8801
                 port.RtsEnable = true;
                 port.Handshake = Handshake.RequestToSendXOnXOff;
                 port.Encoding = System.Text.Encoding.GetEncoding("ISO-8859-1");
+                port.WriteTimeout = defaultTimeoutMilliSecond;
                 portWatcher = Task.Run((Action)watcherTask);
             }
             catch (Exception e)
@@ -173,17 +174,23 @@ namespace RemotePC8801
             updateOpenCloseStatus();
         }
 
-        public void portOutput(string s)
+        public bool portOutput(string s)
         {
             try
             {
                 port.Write(s);
                 AppendLog(s + "\n");
             }
+            catch (TimeoutException e)
+            {
+                AppendLog("TIMEOUT");
+                return true;
+            }
             catch (Exception e)
             {
                 AppendLog(e.ToString());
             }
+            return false;
         }
 
         private void setEnables(bool isOpen)
@@ -246,27 +253,30 @@ namespace RemotePC8801
             if (port == null) return ResultStatusMarker.NotOpen;
             var append = "";
             if (forceHandshake) append = ":PRINT \"###\"";
-            portOutput("\x1b<" + statement + append + "\r");
+            var r = portOutput("\x1b<" + statement + append + "\r");
+            if (r) return ResultStatusMarker.Timeout;
             if (forceHandshake) if (await waitResult() == ResultStatusMarker.Timeout) return ResultStatusMarker.Timeout;
-            portOutput("\x1b<print \":::\";ERR\r");
+            r = portOutput("\x1b<print \":::\";ERR\r");
+            if (r) return ResultStatusMarker.Timeout;
             return await waitResult();
         }
 
         private async Task<ResultStatusMarker> confirmation()
         {
             if (port == null) return ResultStatusMarker.NotOpen;
-            portOutput("\x1b<print \"" + confirmationString + "\"\r");
+            var r = portOutput("\x1b<print \"" + confirmationString + "\"\r");
+            if (r) return ResultStatusMarker.Timeout;
             return await waitResult();
         }
 
-        private const int defaultTimeoutSecond = 5000;
+        private const int defaultTimeoutMilliSecond = 5000;
 
         private async Task<ResultStatusMarker> waitResult(int? timeout = null)
         {
             return await Task.Run(async () =>
             {
                 waiter.Reset();
-                if (timeout == null) timeout = defaultTimeoutSecond;
+                if (timeout == null) timeout = defaultTimeoutMilliSecond;
                 var sucessed = waiter.WaitOne((int)timeout);
                 if (!sucessed)
                 {
