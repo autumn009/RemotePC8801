@@ -34,10 +34,14 @@ namespace RemotePC8801
 
         private NavigationService _navi;
 
+        private static readonly string confirmationString = new string(Enumerable.Range(0x20, 256 - 0x20).Where(c=>c != '"').Select(c=>(char)c).ToArray());
+
         enum ResultStatusMarker
         {
-            CommandEnd,
-            ShowResult
+            ShowResult = -1,
+            CommandEnd = -2,
+            Timeout=-3,
+            Confirmation=-999
         };
 
         private StringBuilder lastLineBuffer = new StringBuilder();
@@ -114,6 +118,11 @@ namespace RemotePC8801
                             result = ResultStatusMarker.CommandEnd;
                             waiter.Set();
                         }
+                        else if (lastLineBuffer.ToString() == confirmationString)    // confirmationString
+                        {
+                            result = ResultStatusMarker.Confirmation;
+                            waiter.Set();
+                        }
                     }
                     else
                     {
@@ -137,6 +146,7 @@ namespace RemotePC8801
                 port.DtrEnable = true;
                 port.RtsEnable = true;
                 port.Handshake = Handshake.RequestToSendXOnXOff;
+                port.Encoding = System.Text.Encoding.GetEncoding("ISO-8859-1");
                 portWatcher = Task.Run((Action)watcherTask);
             }
             catch (Exception e)
@@ -168,7 +178,6 @@ namespace RemotePC8801
                 AppendLog(e.ToString());
             }
         }
-
 
         private void setEnables(bool isOpen)
         {
@@ -208,10 +217,20 @@ namespace RemotePC8801
             setEnables(false);
         }
 
-        private void ButtonPortOpen_Click(object sender, RoutedEventArgs e)
+        private async void ButtonPortOpen_Click(object sender, RoutedEventArgs e)
         {
             portOpen();
-            setEnables(true);
+            bool r = await confirmation();
+            if (r)
+            {
+                AppendLog("Communication confirmed. Ready.\r\n");
+                setEnables(true);
+            }
+            else
+            {
+                AppendLog("Communication Failed. Please verify your environment. Closing Port\r\n");
+                portClose();
+            }
         }
         private int getTargetDrive() => ComboDriveSelect.SelectedIndex + 1;
 
@@ -225,19 +244,28 @@ namespace RemotePC8801
             portOutput("\x1b<print \":::\";ERR\r");
             //port.BaseStream.Flush();
             var r = await waitResult();
-            return r;
+            return (int)r;
         }
 
-        private async Task<int> waitResult()
+        private async Task<bool> confirmation()
+        {
+            if (port == null) return false;
+            portOutput("\x1b<print \"" + confirmationString + "\"\r");
+            var r = await waitResult();
+            return r == ResultStatusMarker.Confirmation;
+        }
+
+
+        private async Task<ResultStatusMarker> waitResult()
         {
             return await Task.Run(() =>
             {
                 waiter.Reset();
                 waiter.WaitOne();
                 var s = lastLineBuffer.ToString();
-                if (s.Length <= 3 || result != ResultStatusMarker.ShowResult) return -1;
+                if (s.Length <= 3 || result != ResultStatusMarker.ShowResult) return result;
                 int.TryParse(s.Substring(3), out var r);
-                return r;
+                return (ResultStatusMarker)r;
             });
         }
 
