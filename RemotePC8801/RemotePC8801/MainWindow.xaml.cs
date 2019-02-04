@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Ports;
+using System.IO;
 
 namespace RemotePC8801
 {
@@ -36,12 +37,13 @@ namespace RemotePC8801
 
         private static readonly string confirmationString = new string(Enumerable.Range(0x20, 256 - 0x20).Where(c=>c != '"').Select(c=>(char)c).ToArray());
 
-        enum ResultStatusMarker
+        public enum ResultStatusMarker
         {
             ShowResult = -1,
             CommandEnd = -2,
-            Timeout=-3,
-            Confirmation=-999
+            Timeout = -3,
+            NotOpen = -4,
+            Confirmation = -999
         };
 
         private StringBuilder lastLineBuffer = new StringBuilder();
@@ -130,6 +132,10 @@ namespace RemotePC8801
                     }
                 }
             }
+            catch (IOException) when (port == null)
+            {
+                // ignore excepton
+            }
             catch (Exception e)
             {
                 await appendLogFromWorkerThread(e.ToString());
@@ -160,9 +166,10 @@ namespace RemotePC8801
         private void portClose()
         {
             if (port == null) return;
-            port.Close();
-            port.Dispose();
+            var p = port;
             port = null;
+            p.Close();
+            p.Dispose();
             updateOpenCloseStatus();
         }
 
@@ -220,48 +227,57 @@ namespace RemotePC8801
         private async void ButtonPortOpen_Click(object sender, RoutedEventArgs e)
         {
             portOpen();
-            bool r = await confirmation();
-            if (r)
+            var r = await confirmation();
+            if (r == ResultStatusMarker.Confirmation)
             {
                 AppendLog("Communication confirmed. Ready.\r\n");
                 setEnables(true);
             }
             else
             {
-                AppendLog("Communication Failed. Please verify your environment. Closing Port\r\n");
+                AppendLog($"Communication Failed.[{ Util.GetErrorString(r) }] Please verify your environment. Closing Port\r\n");
                 portClose();
             }
         }
         private int getTargetDrive() => ComboDriveSelect.SelectedIndex + 1;
 
-        public async Task<int> SendCommandAsync(string statement, bool forceHandshake = false)
+        public async Task<ResultStatusMarker> SendCommandAsync(string statement, bool forceHandshake = false)
         {
-            if (port == null) return -1;
+            if (port == null) return ResultStatusMarker.NotOpen;
             var append = "";
-            if( forceHandshake )append = ":PRINT \"###\"";
-            portOutput("\x1b<" + statement +append+ "\r");
-            if( forceHandshake) await waitResult();
+            if (forceHandshake) append = ":PRINT \"###\"";
+            portOutput("\x1b<" + statement + append + "\r");
+            if (forceHandshake) if (await waitResult() == ResultStatusMarker.Timeout) return ResultStatusMarker.Timeout;
             portOutput("\x1b<print \":::\";ERR\r");
-            //port.BaseStream.Flush();
-            var r = await waitResult();
-            return (int)r;
+            return await waitResult();
         }
 
-        private async Task<bool> confirmation()
+        private async Task<ResultStatusMarker> confirmation()
         {
-            if (port == null) return false;
+            if (port == null) return ResultStatusMarker.NotOpen;
             portOutput("\x1b<print \"" + confirmationString + "\"\r");
-            var r = await waitResult();
-            return r == ResultStatusMarker.Confirmation;
+            return await waitResult();
         }
 
+        private const int defaultTimeoutSecond = 5000;
 
-        private async Task<ResultStatusMarker> waitResult()
+        private async Task<ResultStatusMarker> waitResult(int? timeout = null)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 waiter.Reset();
-                waiter.WaitOne();
+                if (timeout == null) timeout = defaultTimeoutSecond;
+                var sucessed = waiter.WaitOne((int)timeout);
+                if (!sucessed)
+                {
+                    await appendLogFromWorkerThread("Communication Timeout");
+                    Dispatcher.Invoke(() => {
+                        portClose();
+                        setEnables(false);
+                    });
+                    await appendLogFromWorkerThread("Port closed");
+                    return ResultStatusMarker.Timeout;
+                }
                 var s = lastLineBuffer.ToString();
                 if (s.Length <= 3 || result != ResultStatusMarker.ShowResult) return result;
                 int.TryParse(s.Substring(3), out var r);
@@ -287,6 +303,9 @@ namespace RemotePC8801
 
         private async void ButtonDebug_Click(object sender, RoutedEventArgs e)
         {
+            await Util.SendCommandAsyncAndErrorHandle("ABC:",true);
+
+#if false
             await Task.Run(async () =>
             {
                 for (int i = 0; i < 20; i++)
@@ -299,6 +318,7 @@ namespace RemotePC8801
                     await Task.Delay(1000);
                 }
             });
+#endif
         }
     }
 }

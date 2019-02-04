@@ -15,7 +15,7 @@ namespace RemotePC8801
 
         public static void AppendLog(string msg) => MyMainWindow?.AppendLog(msg);
 
-        public static async Task<int> SendCommandAsync(string statement) => await MyMainWindow?.SendCommandAsync(statement);
+        //public static async Task<MainWindow.ResultStatusMarker> SendCommandAsync(string statement) => await MyMainWindow?.SendCommandAsync(statement);
 
         public static async Task<bool> SendCommandAsyncAndErrorHandle(string statement, bool forceHandshake = false)
         {
@@ -38,6 +38,12 @@ namespace RemotePC8801
                 // Enumerate children of the child visual object.
                 EnumVisual(childVisual, act);
             }
+        }
+
+        internal static string GetErrorString(MainWindow.ResultStatusMarker r)
+        {
+            if (Enum.IsDefined(r.GetType(), r)) return Enum.GetName(r.GetType(), r);
+            else return $"[UNDEFINED ERROR={((int)r).ToString()}]";
         }
     }
 }
