@@ -54,7 +54,16 @@ namespace RemotePC8801
         public void AppendLog(string s)
         {
             TextBoxLog.Text += s;
-            TextBoxLog.Select(TextBoxLog.Text.Length - 2, TextBoxLog.Text.Length - 1);
+            if (s.Last() == '\n')
+            {
+                if (TextBoxLog.LineCount > 50)
+                {
+                    var index = TextBoxLog.Text.IndexOf("\r\n");
+                    if (index >= 0) TextBoxLog.Text = TextBoxLog.Text.Substring(index + 2);
+                }
+            }
+
+            //TextBoxLog.Select(TextBoxLog.Text.Length - 2, TextBoxLog.Text.Length - 1);
             //TextBoxLog.SelectAll();
         }
 
@@ -63,7 +72,7 @@ namespace RemotePC8801
             await this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(
                 () =>
                 {
-                    TextBoxLog.Text += s;
+                    AppendLog(s);
                 })
             );
         }
@@ -75,11 +84,11 @@ namespace RemotePC8801
                 {
                     if ((ch >= 32 && ch < 255) || ch == 10 || ch == 13)
                     {
-                        TextBoxLog.Text += new string(ch, 1);
+                        AppendLog(ch.ToString());
                     }
                     else
                     {
-                        TextBoxLog.Text += $"[{((int)ch).ToString("X2")}]";
+                        AppendLog($"[{((int)ch).ToString("X2")}]");
                     }
                 })
             );
