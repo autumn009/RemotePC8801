@@ -35,7 +35,7 @@ namespace RemotePC8801
 
         private NavigationService _navi;
 
-        private static readonly string confirmationString = new string(Enumerable.Range(0x20, 256 - 0x20).Where(c=>c != '"').Select(c=>(char)c).ToArray());
+        private static readonly string confirmationString = new string(Enumerable.Range(0x20, 256 - 0x20).Where(c => c != '"').Select(c => (char)c).ToArray());
 
         public enum ResultStatusMarker
         {
@@ -227,23 +227,29 @@ namespace RemotePC8801
 
         private void ButtonPortClose_Click(object sender, RoutedEventArgs e)
         {
-            portClose();
-            setEnables(false);
+            using (var lck = new LockForm())
+            {
+                portClose();
+                setEnables(false);
+            }
         }
 
         private async void ButtonPortOpen_Click(object sender, RoutedEventArgs e)
         {
-            portOpen();
-            var r = await confirmation();
-            if (r == ResultStatusMarker.Confirmation)
+            using (var lck = new LockForm())
             {
-                AppendLog("Communication confirmed. Ready.\r\n");
-                setEnables(true);
-            }
-            else
-            {
-                AppendLog($"Communication Failed.[{ Util.GetErrorString(r) }] Please verify your environment. Closing Port\r\n");
-                portClose();
+                portOpen();
+                var r = await confirmation();
+                if (r == ResultStatusMarker.Confirmation)
+                {
+                    AppendLog("Communication confirmed. Ready.\r\n");
+                    setEnables(true);
+                }
+                else
+                {
+                    AppendLog($"Communication Failed.[{ Util.GetErrorString(r) }] Please verify your environment. Closing Port\r\n");
+                    portClose();
+                }
             }
         }
         private int getTargetDrive() => ComboDriveSelect.SelectedIndex + 1;
@@ -281,7 +287,8 @@ namespace RemotePC8801
                 if (!sucessed)
                 {
                     await appendLogFromWorkerThread("Communication Timeout");
-                    Dispatcher.Invoke(() => {
+                    Dispatcher.Invoke(() =>
+                    {
                         portClose();
                         setEnables(false);
                     });
@@ -297,23 +304,34 @@ namespace RemotePC8801
 
         private async void ButtonFiles_Click(object sender, RoutedEventArgs e)
         {
-            if (port == null) return;
-            await SendCommandAsync($"files {getTargetDrive()}");
+            using (var lck = new LockForm())
+            {
+                if (port == null) return;
+                await SendCommandAsync($"files {getTargetDrive()}");
+            }
         }
 
         private void ButtonSectors_Click(object sender, RoutedEventArgs e)
         {
-            _navi.Navigate(pageSector);
+            using (var lck = new LockForm())
+            {
+                _navi.Navigate(pageSector);
+            }
         }
 
         private void ButtonDirect_Click(object sender, RoutedEventArgs e)
         {
-            _navi.Navigate(pageDirectCommand);
+            using (var lck = new LockForm())
+            {
+                _navi.Navigate(pageDirectCommand);
+            }
         }
 
         private async void ButtonDebug_Click(object sender, RoutedEventArgs e)
         {
-            await Util.SendCommandAsyncAndErrorHandle("ABC:",true);
+            using (var lck = new LockForm())
+            {
+                await Util.SendCommandAsyncAndErrorHandle("ABC:", true);
 
 #if false
             await Task.Run(async () =>
@@ -329,6 +347,7 @@ namespace RemotePC8801
                 }
             });
 #endif
+            }
         }
     }
 }

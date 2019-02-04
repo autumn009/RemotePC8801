@@ -45,5 +45,23 @@ namespace RemotePC8801
             if (Enum.IsDefined(r.GetType(), r)) return Enum.GetName(r.GetType(), r);
             else return $"[UNDEFINED ERROR={((int)r).ToString()}]";
         }
+
     }
+
+    public class LockForm : IDisposable
+    {
+        private bool oldState;
+
+        public LockForm()
+        {
+            oldState = Util.MyMainWindow.IsEnabled;
+            Util.MyMainWindow.IsEnabled = false;
+        }
+
+        public void Dispose()
+        {
+            Util.MyMainWindow.IsEnabled = oldState;
+        }
+    }
+
 }
