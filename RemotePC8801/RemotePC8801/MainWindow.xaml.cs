@@ -27,6 +27,7 @@ namespace RemotePC8801
         {
             InitializeComponent();
             _navi = this.MainFrame.NavigationService;
+            setVersionState(null);
         }
 
         private Uri pageStart = new Uri("PageStart.xaml", UriKind.Relative);
@@ -184,6 +185,7 @@ namespace RemotePC8801
             p.Close();
             p.Dispose();
             updateOpenCloseStatus();
+            setVersionState(null);
         }
 
         public bool portOutput(string s)
@@ -246,6 +248,13 @@ namespace RemotePC8801
             }
         }
 
+        private void setVersionState(string text)
+        {
+            TextBlockVersionStatus.Text = (text!=null)?text:"NOT READY";
+            TextBlockVersionStatus.Foreground = new SolidColorBrush((text != null)?Colors.Green:Colors.Red);
+            BorderVersionStatus.BorderBrush = TextBlockVersionStatus.Foreground;
+        }
+
         private async void ButtonPortOpen_Click(object sender, RoutedEventArgs e)
         {
             using (var lck = new LockForm())
@@ -260,6 +269,7 @@ namespace RemotePC8801
                     if (!r2)
                     {
                         AppendLog($"Version {statementReaultString}\r\n");
+                        setVersionState("N88-BASIC Version " + statementReaultString + " READY");
                     }
                 }
                 else
@@ -296,7 +306,7 @@ namespace RemotePC8801
         private async Task<bool> getN88Version()
         {
             if (port == null) return false;
-            return await Util.SendCommandAsyncAndErrorHandle("print \"%%%\"+chr$(peek(&h79d5))+chr$(peek(&h79d6))+chr$(peek(&h79d7))\r");
+            return await Util.SendCommandAsyncAndErrorHandle("print \"%%%\"+" + Const.GettingVersionExpression + "\r");
         }
         
 

@@ -28,13 +28,18 @@
 
         </StackPanel>
 
-        <Border BorderThickness="2" BorderBrush="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,25,0,125">
+        <Border BorderThickness="2" BorderBrush="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,25,0,128">
             <Frame Background="AliceBlue" x:Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             
             </Frame>
         </Border>
 
-        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,110">Echo backs</TextBlock>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,110">
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top">Echo backs</TextBlock>
+            <Border BorderThickness="1" BorderBrush="Black" Margin="10,0,10,0" x:Name="BorderVersionStatus" Background="Black">
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="TextBlockVersionStatus" Margin="10,0,10,0" Background="Black" FontWeight="Bold">PLACEHOLDER</TextBlock>
+            </Border>
+        </StackPanel>
         <TextBox x:Name="TextBoxLog" IsReadOnly="True" HorizontalAlignment="Stretch" Height="100" VerticalAlignment="Bottom" Margin="0,0,0,10" TextWrapping="Wrap" FontFamily="MS Gothic"  VerticalScrollBarVisibility="Auto"></TextBox>
         <ProgressBar HorizontalAlignment="Stretch" Height="10" VerticalAlignment="Bottom" IsIndeterminate="True" x:Name="MyProgress" />
     </Grid>
