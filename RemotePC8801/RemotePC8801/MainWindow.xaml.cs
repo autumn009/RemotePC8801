@@ -256,17 +256,17 @@ namespace RemotePC8801
                 {
                     AppendLog("Communication confirmed. Ready.\r\n");
                     setEnables(true);
+                    var r2 = await getN88Version();
+                    if (!r2)
+                    {
+                        AppendLog($"Version {statementReaultString}\r\n");
+                    }
                 }
                 else
                 {
                     AppendLog($"Communication Failed.[{ Util.GetErrorString(r) }] Please verify your environment. Closing Port\r\n");
                     portClose();
-                }
-                var r2 = await getN88Version();
-                if (!r2)
-                {
-                    AppendLog($"Version {statementReaultString}\r\n");
-                    setEnables(true);
+                    setEnables(false);
                 }
             }
         }
