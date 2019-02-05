@@ -1,4 +1,4 @@
-﻿using System;
+﻿                                                        using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -277,7 +277,7 @@ namespace RemotePC8801
             if (port == null) return ResultStatusMarker.NotOpen;
             var append = "";
             if (forceHandshake) append = ":PRINT \"###\"";
-            var r = portOutput("\x1b<" + statement + append + "\r");
+            var r = portOutput("\x1b<" + Const.ClearErrStatement + ":" + statement + append + "\r");
             if (r) return ResultStatusMarker.Timeout;
             if (forceHandshake) if (await waitResult() == ResultStatusMarker.Timeout) return ResultStatusMarker.Timeout;
             r = portOutput("\x1b<print \":::\";ERR\r");
