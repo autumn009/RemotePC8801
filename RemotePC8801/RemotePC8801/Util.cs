@@ -7,6 +7,25 @@ using System.Windows.Media;
 
 namespace RemotePC8801
 {
+    class DiskInfo
+    {
+        public int DriveNo; // 読み出したドライブ番号
+        public int FreeClustors; //省略時 ： ディスクの 残り 容量 （クラスタ 単位） 
+        public int MaxTrackNo; //0 ： 最大 トラック 番号 （= 片面 当りの トラック 数 一 1) 
+        public int SectorsInTracki; //1 ： 1 トラック 当りの セクタ 数 
+        public int Surfaces; //2 ： ディスクの サーフ ヱ イス （面) 数 一 1 
+        public int ClustorsInTrack; //3 ： 1 トラック 当りの クラスタ 数 または 1 クラスタ 当りの トラック 数 
+                      //フロッピーディスク （サー フェイス 数一 1 = 1) の 場合 ： 1 トラック 当りの クラ スタ数 
+                      //固定 ディスク （サー フェイス 数一 1> 1) の 場合： 1 クラスタ 当りの トラック 数 
+        public int ClustorsInVolume; //4 ： ボリューム 当りの クラスタ 数 
+        public int DirectoryTrack; //5 ： ディレクトリ トラック 番号 
+        public int SectorsInCluster; //6 ： 1 クラスタ 当りの セクタ 数 
+        public int FATStartSector; //7 ： FAT の 開始 セクタ 番号 
+        public int FATEndSector; //8 ： FAT の 終了 セクタ 番号 
+        public int NumverOfFATs; //9 ： FAT の 数 
+        public int SectorInDiskAttr; //10 ： ディスク 属性の 入って いる セクタ 番号 
+    }
+
     class Util
     {
         public static MainWindow MyMainWindow => ((MainWindow)App.Current.MainWindow);
@@ -46,6 +65,36 @@ namespace RemotePC8801
             else return $"[UNDEFINED ERROR={((int)r).ToString()}]";
         }
 
+        public async static Task<DiskInfo> GetDiskInf( int drive)
+        {
+            var info = new DiskInfo();
+            info.DriveNo = drive;
+            var ten = string.Join(",",Enumerable.Range(0, 11).Select(c => $"DSKF({drive},{c})").ToArray());
+            if (await Util.SendCommandAsyncAndErrorHandle($"print \"%%%\";:WRITE DSKF({drive}),"+ten)) return null;
+            var ar = Util.MyMainWindow.StatementReaultString.Split(',').Select(c=>
+            {
+                int.TryParse(c.Trim(), out var r);
+                return r;
+            }).ToArray();
+            info.FreeClustors = ar[0];
+            info.MaxTrackNo = ar[1];
+            info.SectorsInTracki = ar[2];
+            info.Surfaces = ar[3];
+            info.ClustorsInTrack = ar[4];
+            info.ClustorsInVolume = ar[5];
+            info.DirectoryTrack = ar[6];
+            info.SectorsInCluster = ar[7];
+            info.FATStartSector = ar[8];
+            info.FATEndSector = ar[9];
+            info.NumverOfFATs = ar[10];
+            info.SectorInDiskAttr = ar[11];
+            return info;
+        }
+
+        internal static int GetSelectedDrive()
+        {
+            return MyMainWindow.ComboDriveSelect.SelectedIndex+1;
+        }
     }
 
     public class LockForm : IDisposable

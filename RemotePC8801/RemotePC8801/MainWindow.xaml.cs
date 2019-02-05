@@ -33,6 +33,7 @@ namespace RemotePC8801
         private Uri pageStart = new Uri("PageStart.xaml", UriKind.Relative);
         private Uri pageDirectCommand = new Uri("PageDirectCommand.xaml", UriKind.Relative);
         private Uri pageSector = new Uri("PageSector.xaml", UriKind.Relative);
+        private Uri pageDiskInfo = new Uri("PageDiskInfo.xaml", UriKind.Relative);
 
         private NavigationService _navi;
 
@@ -50,6 +51,7 @@ namespace RemotePC8801
         private StringBuilder lastLineBuffer = new StringBuilder();
         private StringBuilder currentLineBuffer = new StringBuilder();
         private string statementReaultString = null;
+        public string StatementReaultString => statementReaultString;
         private AutoResetEvent waiter = new AutoResetEvent(false);
         private ResultStatusMarker result;
 
@@ -384,6 +386,14 @@ namespace RemotePC8801
                 }
             });
 #endif
+            }
+        }
+
+        private void ButtonDiskInfo_Click(object sender, RoutedEventArgs e)
+        {
+            using (var lck = new LockForm())
+            {
+                _navi.Navigate(pageDiskInfo);
             }
         }
     }
