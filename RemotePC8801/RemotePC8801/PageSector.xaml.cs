@@ -57,10 +57,17 @@ namespace RemotePC8801
 
         private async void ButtonRead_Click(object sender, RoutedEventArgs e)
         {
+            var diskinfo = await Util.GetDiskInf(Util.GetSelectedDrive());
             int.TryParse(TextBoxTrack.Text, out int track);
             int.TryParse(TextBoxSector.Text, out int sector);
+
+            var valid = diskinfo.VaridateParameters(ComboBoxDrives.SelectedIndex + 1, ComboBoxSurface.SelectedIndex, track, sector, (message) =>
+            {
+                Util.ErrorPopup(message);
+            });
+            if (!valid) return;
             if (await Util.SendCommandAsyncAndErrorHandle("FIELD #0,128 AS A$(0), 128 AS A$(1)")) return;
-            if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})",true)) return;
+            if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})", true)) return;
             //if (await Util.SendCommandAsyncAndErrorHandle("PRINT asc(A$(0)), asc(A$(1))")) return;
         }
 

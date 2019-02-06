@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace RemotePC8801
@@ -12,7 +13,7 @@ namespace RemotePC8801
         public int DriveNo; // 読み出したドライブ番号
         public int FreeClustors; //省略時 ： ディスクの 残り 容量 （クラスタ 単位） 
         public int MaxTrackNo; //0 ： 最大 トラック 番号 （= 片面 当りの トラック 数 一 1) 
-        public int SectorsInTracki; //1 ： 1 トラック 当りの セクタ 数 
+        public int SectorsInTrack; //1 ： 1 トラック 当りの セクタ 数 
         public int Surfaces; //2 ： ディスクの サーフ ヱ イス （面) 数 一 1 
         public int ClustorsInTrack; //3 ： 1 トラック 当りの クラスタ 数 または 1 クラスタ 当りの トラック 数 
                       //フロッピーディスク （サー フェイス 数一 1 = 1) の 場合 ： 1 トラック 当りの クラ スタ数 
@@ -24,6 +25,46 @@ namespace RemotePC8801
         public int FATEndSector; //8 ： FAT の 終了 セクタ 番号 
         public int NumverOfFATs; //9 ： FAT の 数 
         public int SectorInDiskAttr; //10 ： ディスク 属性の 入って いる セクタ 番号 
+
+        internal bool VaridateParameters(int drive, int surface, int track, int sector, Action<string> errorReporter)
+        {
+            if( DriveNo != drive)
+            {
+                errorReporter($"Drive Not Match {DriveNo}/{drive}");
+                return false;
+            }
+            if (surface < 0)
+            {
+                errorReporter($"Minimum surface is 0 but {surface}");
+                return false;
+            }
+            if (track < 0)
+            {
+                errorReporter($"Minimum track is 0 but {track}");
+                return false;
+            }
+            if (sector < 1)
+            {
+                errorReporter($"Minimum sector is 1 but {sector}");
+                return false;
+            }
+            if (surface > Surfaces)
+            {
+                errorReporter($"Maximum surface is {Surfaces} but {surface}");
+                return false;
+            }
+            if (track > MaxTrackNo)
+            {
+                errorReporter($"Maximum track is {MaxTrackNo} but {track}");
+                return false;
+            }
+            if (sector > SectorsInTrack)
+            {
+                errorReporter($"Maximum sector is {SectorsInTrack} but {sector}");
+                return false;
+            }
+            return true;
+        }
     }
 
     class Util
@@ -65,6 +106,12 @@ namespace RemotePC8801
             else return $"[UNDEFINED ERROR={((int)r).ToString()}]";
         }
 
+        internal static void ErrorPopup(string message)
+        {
+            MessageBox.Show(MyMainWindow,message);
+        }
+
+
         public async static Task<DiskInfo> GetDiskInf( int drive)
         {
             var info = new DiskInfo();
@@ -78,7 +125,7 @@ namespace RemotePC8801
             }).ToArray();
             info.FreeClustors = ar[0];
             info.MaxTrackNo = ar[1];
-            info.SectorsInTracki = ar[2];
+            info.SectorsInTrack = ar[2];
             info.Surfaces = ar[3];
             info.ClustorsInTrack = ar[4];
             info.ClustorsInVolume = ar[5];
