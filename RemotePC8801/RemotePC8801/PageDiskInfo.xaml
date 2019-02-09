@@ -10,7 +10,8 @@
       Loaded="Page_Loaded">
 
     <Grid>
-        <ListBox x:Name="ListBoxDiskInfos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Button x:Name="ButtonReload" Click="ButtonReload_Click" HorizontalAlignment="Left" VerticalAlignment="Top">RELOAD</Button>
+        <ListBox x:Name="ListBoxDiskInfos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,0" >
         </ListBox>
     </Grid>
 </Page>

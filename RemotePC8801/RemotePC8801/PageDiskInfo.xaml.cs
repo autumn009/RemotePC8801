@@ -28,14 +28,28 @@ namespace RemotePC8801
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            var driveNo = Util.GetSelectedDrive();
-            var info = await Util.GetDiskInf(driveNo);
-            foreach (var item in info.GetType().GetFields())
+            await update();
+        }
+
+        private async Task update()
+        {
+            using (var lck = new LockForm())
             {
-                var v = item.GetValue(info);
-                var s = item.Name + "=" + v.ToString();
-                ListBoxDiskInfos.Items.Add(s);
+                ListBoxDiskInfos.Items.Clear();
+                var driveNo = Util.GetSelectedDrive();
+                var info = await Util.GetDiskInf(driveNo);
+                foreach (var item in info.GetType().GetFields())
+                {
+                    var v = item.GetValue(info);
+                    var s = item.Name + "=" + v.ToString();
+                    ListBoxDiskInfos.Items.Add(s);
+                }
             }
+        }
+
+        private async void ButtonReload_Click(object sender, RoutedEventArgs e)
+        {            
+            await update();
         }
     }
 }
