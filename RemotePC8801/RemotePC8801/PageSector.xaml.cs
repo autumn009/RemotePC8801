@@ -58,8 +58,19 @@ namespace RemotePC8801
             }
         }
 
+        private void setAllXX()
+        {
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    textBlocks[x,y].Text = "XX";
+                }
+            }
+        }
         private async void ButtonRead_Click(object sender, RoutedEventArgs e)
         {
+            setAllXX();
             var diskinfo = await Util.GetDiskInf(Util.GetSelectedDrive());
             int.TryParse(TextBoxTrack.Text, out int track);
             int.TryParse(TextBoxSector.Text, out int sector);
@@ -69,7 +80,7 @@ namespace RemotePC8801
                 Util.ErrorPopup(message);
             });
             if (!valid) return;
-            if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})"+ ":PRINT \"%%%\";:a=VARPTR(#0):FOR I=0 to 255:V=PEEK(a+i):T$=chr$(V)+\" \"+CHR$((V+&H20) and &hFF):N=(V<=&h20)*-1:L=N+1:PRINT MID$(T$,N+1,L);:NEXT:PRINT", true)) return;
+            if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})"+ Const.SectorReadStatements, true)) return;
             var bytes = Util.DecodeBinaryString(Util.MyMainWindow.StatementReaultString);
             int x = 0, y = 0;
             foreach (var item in bytes)
