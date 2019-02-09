@@ -135,7 +135,7 @@ namespace RemotePC8801
             info.DriveNo = drive;
             var ten = string.Join(",",Enumerable.Range(0, 11).Select(c => $"DSKF({drive},{c})").ToArray());
             if (await Util.SendCommandAsyncAndErrorHandle($"print \"%%%\";:WRITE DSKF({drive}),"+ten)) return null;
-            var ar = Util.MyMainWindow.StatementReaultString.Split(',').Select(c=>
+            var ar = Util.MyMainWindow.StatementResultString.Split(',').Select(c=>
             {
                 int.TryParse(c.Trim(), out var r);
                 return r;

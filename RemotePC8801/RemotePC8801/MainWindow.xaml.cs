@@ -51,7 +51,7 @@ namespace RemotePC8801
         private StringBuilder lastLineBuffer = new StringBuilder();
         private StringBuilder currentLineBuffer = new StringBuilder();
         private string statementReaultString = null;
-        public string StatementReaultString => statementReaultString;
+        public string StatementResultString => statementReaultString;
         private AutoResetEvent waiter = new AutoResetEvent(false);
         private ResultStatusMarker result;
 

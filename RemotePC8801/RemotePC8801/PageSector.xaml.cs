@@ -81,7 +81,7 @@ namespace RemotePC8801
             });
             if (!valid) return;
             if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})"+ Const.SectorReadStatements, true)) return;
-            var bytes = Util.DecodeBinaryString(Util.MyMainWindow.StatementReaultString);
+            var bytes = Util.DecodeBinaryString(Util.MyMainWindow.StatementResultString);
             int x = 0, y = 0;
             foreach (var item in bytes)
             {
