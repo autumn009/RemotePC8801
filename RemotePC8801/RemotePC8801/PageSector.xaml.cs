@@ -85,17 +85,17 @@ namespace RemotePC8801
             int x = 0, y = 0;
             foreach (var item in bytes)
             {
+                if (y > 15)
+                {
+                    MessageBox.Show("Sector Data too large: " + bytes.Count().ToString());
+                    break;
+                }
                 textBlocks[x, y].Text = item.ToString("X2");
                 x++;
                 if( x> 15)
                 {
                     x = 0;
                     y++;
-                    if (y > 15)
-                    {
-                        MessageBox.Show("Sector Data too large: " + bytes.Count().ToString());
-                        break;
-                    }
                 }
             }
         }

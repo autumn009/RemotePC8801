@@ -81,12 +81,12 @@ namespace RemotePC8801
             foreach (var item in encodedString)
             {
                 byte n = (byte)item;
-                if (n == 0x20)
+                if (escaped) n -= 0x20;
+                else if (n == 0x20)
                 {
                     escaped = true;
                     continue;
                 }
-                if (escaped) n -= 0x20;
                 yield return n;
                 escaped = false;
             }
