@@ -75,6 +75,23 @@ namespace RemotePC8801
 
         public static void AppendLog(string msg) => MyMainWindow?.AppendLog(msg);
 
+        internal static IEnumerable<byte> DecodeBinaryString(string encodedString)
+        {
+            bool escaped = false;
+            foreach (var item in encodedString)
+            {
+                byte n = (byte)item;
+                if (n == 0x20)
+                {
+                    escaped = true;
+                    continue;
+                }
+                if (escaped) n -= 0x20;
+                yield return n;
+                escaped = false;
+            }
+        }
+
         //public static async Task<MainWindow.ResultStatusMarker> SendCommandAsync(string statement) => await MyMainWindow?.SendCommandAsync(statement);
 
         public static async Task<bool> SendCommandAsyncAndErrorHandle(string statement, bool forceHandshake = false)

@@ -26,6 +26,7 @@ namespace RemotePC8801
         }
 
         private const string Sixteen = "0123456789ABCDEF";
+        private TextBox[,] textBlocks;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < 16; i++)
@@ -36,10 +37,11 @@ namespace RemotePC8801
                 MainGrid.Children.Add(tb);
                 var tb2 = new TextBlock(new Run(Sixteen[i].ToString()));
                 Grid.SetColumn(tb2, 0);
-                Grid.SetRow(tb2, i+1);
+                Grid.SetRow(tb2, i + 1);
                 MainGrid.Children.Add(tb2);
             }
 
+            textBlocks = new TextBox[16, 16];
             for (int y = 0; y < 16; y++)
             {
                 for (int x = 0; x < 16; x++)
@@ -51,6 +53,7 @@ namespace RemotePC8801
                     Grid.SetColumn(tb, x + 1);
                     Grid.SetRow(tb, y + 1);
                     MainGrid.Children.Add(tb);
+                    textBlocks[x, y] = tb;
                 }
             }
         }
@@ -68,7 +71,27 @@ namespace RemotePC8801
             if (!valid) return;
             if (await Util.SendCommandAsyncAndErrorHandle("FIELD #0,128 AS A$(0), 128 AS A$(1)")) return;
             if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})", true)) return;
+            //if (await Util.SendCommandAsyncAndErrorHandle("PRINT LEN(A$(0)),LEN(A$(1))")) return;
             //if (await Util.SendCommandAsyncAndErrorHandle("PRINT asc(A$(0)), asc(A$(1))")) return;
+            if (await Util.SendCommandAsyncAndErrorHandle("PRINT \"%%%\";:FOR J=0 to 1:FOR I=0 to 127:V$=MID$(A$(J),I+1,1):T$=V$+\" \"+CHR$((ASC(V$)+&H20) and &hFF):N=(ASC(V$)<=&h20)*-1:L=N+1:PRINT MID$(T$,N+1,L);:NEXT:NEXT:PRINT")) return;
+            var bytes = Util.DecodeBinaryString(Util.MyMainWindow.StatementReaultString);
+
+            int x = 0, y = 0;
+            foreach (var item in bytes)
+            {
+                textBlocks[x, y].Text = item.ToString("X2");
+                x++;
+                if( x> 15)
+                {
+                    x = 0;
+                    y++;
+                    if (y > 15)
+                    {
+                        MessageBox.Show("Sector Data too large: " + bytes.Count().ToString());
+                        break;
+                    }
+                }
+            }
         }
 
         private void ButtonPrev_Click(object sender, RoutedEventArgs e)
