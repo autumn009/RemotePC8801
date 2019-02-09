@@ -11,6 +11,7 @@
 
     <Grid>
         <Button x:Name="ButtonReload" Click="ButtonReload_Click" HorizontalAlignment="Left" VerticalAlignment="Top">RELOAD</Button>
+        <Button x:Name="ButtonCopy" Click="ButtonCopy_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,0,0,0">COPY INFO</Button>
         <ListBox x:Name="ListBoxDiskInfos" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,0" >
         </ListBox>
     </Grid>

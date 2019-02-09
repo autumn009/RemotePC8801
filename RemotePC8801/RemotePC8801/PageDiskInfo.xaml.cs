@@ -31,13 +31,15 @@ namespace RemotePC8801
             await update();
         }
 
+        private DiskInfo info = null;
+
         private async Task update()
         {
             using (var lck = new LockForm())
             {
                 ListBoxDiskInfos.Items.Clear();
                 var driveNo = Util.GetSelectedDrive();
-                var info = await Util.GetDiskInf(driveNo);
+                info = await Util.GetDiskInf(driveNo);
                 foreach (var item in info.GetType().GetFields())
                 {
                     var v = item.GetValue(info);
@@ -48,8 +50,22 @@ namespace RemotePC8801
         }
 
         private async void ButtonReload_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             await update();
+        }
+
+        private void ButtonCopy_Click(object sender, RoutedEventArgs e)
+        {
+            using (var lck = new LockForm())
+            {
+                var sb = new StringBuilder();
+                foreach (var item in info.GetType().GetFields())
+                {
+                    sb.AppendFormat("{0}={1}\r\n", item.Name, item.GetValue(info));
+                }
+                Clipboard.Clear();
+                Clipboard.SetText(sb.ToString());
+            }
         }
     }
 }
