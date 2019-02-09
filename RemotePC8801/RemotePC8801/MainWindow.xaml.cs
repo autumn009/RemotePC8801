@@ -312,7 +312,7 @@ namespace RemotePC8801
         }
         
 
-        private const int defaultTimeoutMilliSecond = 5000;
+        private const int defaultTimeoutMilliSecond = 30000;
 
         private async Task<ResultStatusMarker> waitResult(int? timeout = null)
         {

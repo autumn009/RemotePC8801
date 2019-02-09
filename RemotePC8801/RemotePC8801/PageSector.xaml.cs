@@ -69,13 +69,8 @@ namespace RemotePC8801
                 Util.ErrorPopup(message);
             });
             if (!valid) return;
-            if (await Util.SendCommandAsyncAndErrorHandle("FIELD #0,128 AS A$(0), 128 AS A$(1)")) return;
-            if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})", true)) return;
-            //if (await Util.SendCommandAsyncAndErrorHandle("PRINT LEN(A$(0)),LEN(A$(1))")) return;
-            //if (await Util.SendCommandAsyncAndErrorHandle("PRINT asc(A$(0)), asc(A$(1))")) return;
-            if (await Util.SendCommandAsyncAndErrorHandle("PRINT \"%%%\";:FOR J=0 to 1:FOR I=0 to 127:V$=MID$(A$(J),I+1,1):T$=V$+\" \"+CHR$((ASC(V$)+&H20) and &hFF):N=(ASC(V$)<=&h20)*-1:L=N+1:PRINT MID$(T$,N+1,L);:NEXT:NEXT:PRINT")) return;
+            if (await Util.SendCommandAsyncAndErrorHandle($"DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})"+ ":PRINT \"%%%\";:a=VARPTR(#0):FOR I=0 to 255:V=PEEK(a+i):T$=chr$(V)+\" \"+CHR$((V+&H20) and &hFF):N=(V<=&h20)*-1:L=N+1:PRINT MID$(T$,N+1,L);:NEXT:PRINT", true)) return;
             var bytes = Util.DecodeBinaryString(Util.MyMainWindow.StatementReaultString);
-
             int x = 0, y = 0;
             foreach (var item in bytes)
             {
