@@ -40,6 +40,7 @@ namespace RemotePC8801
                 ListBoxDiskInfos.Items.Clear();
                 var driveNo = Util.GetSelectedDrive();
                 info = await Util.GetDiskInf(driveNo);
+                if (info == null) return;
                 foreach (var item in info.GetType().GetFields())
                 {
                     var v = item.GetValue(info);
@@ -58,6 +59,7 @@ namespace RemotePC8801
         {
             using (var lck = new LockForm())
             {
+                if (info == null) return;
                 var sb = new StringBuilder();
                 foreach (var item in info.GetType().GetFields())
                 {
