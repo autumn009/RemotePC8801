@@ -103,6 +103,15 @@ namespace RemotePC8801
 
         public bool IsPortOpen => port != null;
 
+        public int blockReadCounter = 0;
+        public byte[] blockReadBuffer = new byte[256];
+
+        public void BlockReadRequest(int count)
+        {
+            System.Diagnostics.Debug.Assert(count == 256);
+            blockReadCounter = count;
+        }
+
         private async void watcherTask()
         {
             try
@@ -114,6 +123,12 @@ namespace RemotePC8801
                     //System.Diagnostics.Debug.Write("!");
 
                     if (ch == -1) return;
+                    if( blockReadCounter > 0)
+                    {
+                        blockReadBuffer[255-(--blockReadCounter)]= (byte)ch;
+                        continue;
+                    }
+
                     await appendLogFromWorkerThread((char)ch);
                     if (ch == 13)
                     {
@@ -168,7 +183,7 @@ namespace RemotePC8801
                 port.Open();
                 port.DtrEnable = true;
                 port.RtsEnable = true;
-                port.Handshake = Handshake.RequestToSendXOnXOff;
+                port.Handshake = Handshake.RequestToSend;
                 port.Encoding = System.Text.Encoding.GetEncoding("ISO-8859-1");
                 port.WriteTimeout = defaultTimeoutMilliSecond;
                 portWatcher = Task.Run((Action)watcherTask);
@@ -374,7 +389,8 @@ namespace RemotePC8801
             var start = DateTimeOffset.Now;
             if (await Util.SendCommandAsyncAndErrorHandle(Const.RomReadStatements, true)) return;
             var diff = DateTimeOffset.Now - start;
-            var rate = 256*10/diff.Seconds;
+            float rate = 0.0f;
+            if (diff.Seconds > 0) rate = 256.0f * 10.0f / diff.Seconds;
             MessageBox.Show("Time was " + diff.ToString() + " Rate was " + rate + "bps");
 #else
 
