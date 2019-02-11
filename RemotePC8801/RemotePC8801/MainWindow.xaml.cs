@@ -1,4 +1,6 @@
-﻿                                                        using System;
+﻿#define BENCHMARK
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -368,6 +370,14 @@ namespace RemotePC8801
 
         private async void ButtonDebug_Click(object sender, RoutedEventArgs e)
         {
+#if BENCHMARK
+            var start = DateTimeOffset.Now;
+            if (await Util.SendCommandAsyncAndErrorHandle(Const.RomReadStatements, true)) return;
+            var diff = DateTimeOffset.Now - start;
+            var rate = 256*10/diff.Seconds;
+            MessageBox.Show("Time was " + diff.ToString() + " Rate was " + rate + "bps");
+#else
+
             using (var lck = new LockForm())
             {
                 await Util.SendCommandAsyncAndErrorHandle("ABC:", true);
@@ -387,6 +397,7 @@ namespace RemotePC8801
             });
 #endif
             }
+#endif
         }
 
         private void ButtonDiskInfo_Click(object sender, RoutedEventArgs e)
