@@ -29,8 +29,8 @@
             <Button x:Name="ButtonRead" Margin="2" Click="ButtonRead_Click">READ</Button>
             <Button x:Name="ButtonPrev" Margin="2" Click="ButtonPrev_Click">PREV</Button>
             <Button x:Name="ButtonNext" Margin="2" Click="ButtonNext_Click">NEXT</Button>
-            <Button x:Name="ButtonWrite" Margin="2" Click="ButtonWrite_Click">WRITE</Button>
-            <CheckBox x:Name="CheckBoxEnableEdit" Margin="2">Enable Edit</CheckBox>
+            <Button x:Name="ButtonWrite" Margin="2" Click="ButtonWrite_Click" IsEnabled="False">WRITE</Button>
+            <CheckBox x:Name="CheckBoxEnableEdit" Margin="2" Checked="CheckBoxEnableEdit_Checked" Unchecked="CheckBoxEnableEdit_Unchecked">Enable Edit</CheckBox>
         </StackPanel>
         <Grid x:Name="MainGrid" Margin="0,20,0,0">
             <Grid.RowDefinitions>

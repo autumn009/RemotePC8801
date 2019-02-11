@@ -102,7 +102,6 @@ namespace RemotePC8801
 
         private void ButtonPrev_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void ButtonNext_Click(object sender, RoutedEventArgs e)
@@ -114,5 +113,27 @@ namespace RemotePC8801
         {
 
         }
+
+        private void setEnable(bool newEnableState)
+        {
+            ButtonWrite.IsEnabled = newEnableState;
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    textBlocks[x, y].IsEnabled = newEnableState;
+                }
+            }
+        }
+                private void CheckBoxEnableEdit_Checked(object sender, RoutedEventArgs e)
+        {
+            setEnable(true);
+        }
+
+        private void CheckBoxEnableEdit_Unchecked(object sender, RoutedEventArgs e)
+        {
+            setEnable(false);
+        }
+
     }
 }
