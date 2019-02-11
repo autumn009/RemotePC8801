@@ -300,7 +300,7 @@ namespace RemotePC8801
         private async Task<ResultStatusMarker> confirmation()
         {
             if (port == null) return ResultStatusMarker.NotOpen;
-            var r = portOutput("\x1b<print \"" + confirmationString + "\"\r");
+            var r = portOutput("\x1b<" + Const.ClearErrStatement + ":print \"" + confirmationString + "\"\r");
             if (r) return ResultStatusMarker.Timeout;
             return await waitResult();
         }
