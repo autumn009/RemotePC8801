@@ -294,7 +294,7 @@ namespace RemotePC8801
             var r = portOutput("\x1b<" + Const.ClearErrStatement + ":" + statement + append + "\r");
             if (r) return ResultStatusMarker.Timeout;
             if (forceHandshake) if (await waitResult() == ResultStatusMarker.Timeout) return ResultStatusMarker.Timeout;
-            r = portOutput("\x1b<print \":::\";ERR\r");
+            r = portOutput("\x1b<print:print \":::\";ERR\r");
             if (r) return ResultStatusMarker.Timeout;
             return await waitResult();
         }
