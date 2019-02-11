@@ -21,6 +21,11 @@
                 <ComboBoxItem>DRIVE3</ComboBoxItem>
                 <ComboBoxItem>DRIVE4</ComboBoxItem>
             </ComboBox>
+            <ComboBox SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="2" x:Name="ComboFormatSelect">
+                <ComboBoxItem>DEFAULT</ComboBoxItem>
+                <ComboBoxItem>SS35TR</ComboBoxItem>
+                <ComboBoxItem>SS40TR</ComboBoxItem>
+            </ComboBox>
             <Button Content="DISK INFO" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonDiskInfo" Click="ButtonDiskInfo_Click"></Button>
             <Button Content="FILES" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonFiles" Click="ButtonFiles_Click"></Button>
             <Button Content="SECTOR" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" x:Name="ButtonSectors" Click="ButtonSectors_Click"></Button>
