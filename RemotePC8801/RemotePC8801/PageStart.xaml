@@ -9,6 +9,9 @@
       Title="PageStart">
 
     <Grid>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30">Remote PC-8801 Initial Page</TextBlock>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" >
+            <TextBlock FontSize="30">Remote PC-8801 Initial Page</TextBlock>
+            <Button x:Name="AutoSave" Click="AutoSave_Click" IsEnabled="False">Auto SAVE "rem88",a</Button>
+        </StackPanel>
     </Grid>
 </Page>
