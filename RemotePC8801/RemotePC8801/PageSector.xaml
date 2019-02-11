@@ -70,6 +70,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
         </Grid>
     </Grid>

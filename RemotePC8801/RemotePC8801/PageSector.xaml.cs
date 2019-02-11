@@ -27,6 +27,7 @@ namespace RemotePC8801
 
         private const string Sixteen = "0123456789ABCDEF";
         private TextBox[,] textBlocks;
+        private TextBlock[] textBlocksAcsii;
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < 16; i++)
@@ -42,6 +43,7 @@ namespace RemotePC8801
             }
 
             textBlocks = new TextBox[16, 16];
+            textBlocksAcsii = new TextBlock[16];
             for (int y = 0; y < 16; y++)
             {
                 for (int x = 0; x < 16; x++)
@@ -55,6 +57,14 @@ namespace RemotePC8801
                     MainGrid.Children.Add(tb);
                     textBlocks[x, y] = tb;
                 }
+                var ta = new TextBlock();
+                ta.Text = "................";
+                ta.Name = $"ascii{Sixteen[y]}";
+                ta.FontFamily = new FontFamily("Courier New");
+                Grid.SetColumn(ta, 17);
+                Grid.SetRow(ta, y + 1);
+                MainGrid.Children.Add(ta);
+                textBlocksAcsii[y] = ta;
             }
         }
 
@@ -96,6 +106,24 @@ namespace RemotePC8801
                     x = 0;
                     y++;
                 }
+            }
+            updateAscii();
+        }
+
+        private void updateAscii()
+        {
+            var sb = new StringBuilder();
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    var s = textBlocks[x, y].Text;
+                    int.TryParse(s, System.Globalization.NumberStyles.HexNumber, null, out var result);
+                    if (result <= 0x20 || result >= 0x7f) result = '.';
+                    sb.Append((char)result);
+                }
+                textBlocksAcsii[y].Text = sb.ToString();
+                sb.Clear();
             }
         }
 
