@@ -32,7 +32,7 @@ namespace RemotePC8801
 20 console 0,25,1,1
 30 cls 1
 40 print ""TERM MODE""
-50 color 2:print ""SHIFT+STOP"";:color 7:print ""to quit TERM mode.""
+50 color 2:print ""SHIFT+STOP"";:color 7:print "" to quit TERM mode.""
 60 term ""N81NNF"",,8192
 ";
 

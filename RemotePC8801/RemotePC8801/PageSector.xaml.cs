@@ -68,10 +68,8 @@ namespace RemotePC8801
                 }
             }
         }
-        private async void ButtonRead_Click(object sender, RoutedEventArgs e)
+        private async Task readCommon(DiskInfo diskinfo)
         {
-            setAllXX();
-            var diskinfo = await Util.GetDiskInf(Util.GetSelectedDrive());
             int.TryParse(TextBoxTrack.Text, out int track);
             int.TryParse(TextBoxSector.Text, out int sector);
 
@@ -81,7 +79,7 @@ namespace RemotePC8801
             });
             if (!valid) return;
             Util.MyMainWindow.BlockReadRequest(256);
-            if (await Util.SendCommandAsyncAndErrorHandle($"FIELD #0,128 as a$, 128 as b$:DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})"+ Const.SectorReadStatements, true)) return;
+            if (await Util.SendCommandAsyncAndErrorHandle($"FIELD #0,128 as a$, 128 as b$:DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})" + Const.SectorReadStatements, true)) return;
             var bytes = Util.MyMainWindow.blockReadBuffer;
             int x = 0, y = 0;
             foreach (var item in bytes)
@@ -93,7 +91,7 @@ namespace RemotePC8801
                 }
                 textBlocks[x, y].Text = item.ToString("X2");
                 x++;
-                if( x> 15)
+                if (x > 15)
                 {
                     x = 0;
                     y++;
@@ -101,18 +99,81 @@ namespace RemotePC8801
             }
         }
 
-        private void ButtonPrev_Click(object sender, RoutedEventArgs e)
+        private async void ButtonRead_Click(object sender, RoutedEventArgs e)
         {
+            using (var lockf = new LockForm())
+            {
+                setAllXX();
+                var diskinfo = await Util.GetDiskInf(Util.GetSelectedDrive());
+                await readCommon(diskinfo);
+            }
         }
 
-        private void ButtonNext_Click(object sender, RoutedEventArgs e)
+        private async void ButtonPrev_Click(object sender, RoutedEventArgs e)
         {
+            using (var lockf = new LockForm())
+            {
+                setAllXX();
+                var diskinfo = await Util.GetDiskInf(Util.GetSelectedDrive());
+                int.TryParse(TextBoxTrack.Text, out int track);
+                int.TryParse(TextBoxSector.Text, out int sector);
+                sector--;
+                if (sector < 1)
+                {
+                    sector = diskinfo.SectorsInTrack;
+                    track--;
+                    if (track < 1)
+                    {
+                        track = diskinfo.MaxTrackNo;
+                        var surfaceno = ComboBoxSurface.SelectedIndex;
+                        surfaceno--;
+                        if (surfaceno < 0)
+                        {
+                            surfaceno = diskinfo.Surfaces;
+                        }
+                        ComboBoxSurface.SelectedIndex = surfaceno;
+                    }
+                }
+                TextBoxTrack.Text = track.ToString();
+                TextBoxSector.Text = sector.ToString();
+                await readCommon(diskinfo);
+            }
+        }
 
+        private async void ButtonNext_Click(object sender, RoutedEventArgs e)
+        {
+            using (var lockf = new LockForm())
+            {
+                setAllXX();
+                var diskinfo = await Util.GetDiskInf(Util.GetSelectedDrive());
+                int.TryParse(TextBoxTrack.Text, out int track);
+                int.TryParse(TextBoxSector.Text, out int sector);
+                sector++;
+                if (sector > diskinfo.SectorsInTrack)
+                {
+                    sector = 1;
+                    track++;
+                    if (track > diskinfo.MaxTrackNo)
+                    {
+                        track = 0;
+                        var surfaceno = ComboBoxSurface.SelectedIndex;
+                        surfaceno++;
+                        if (surfaceno > diskinfo.Surfaces)
+                        {
+                            surfaceno = 0;
+                        }
+                        ComboBoxSurface.SelectedIndex = surfaceno;
+                    }
+                }
+                TextBoxTrack.Text = track.ToString();
+                TextBoxSector.Text = sector.ToString();
+                await readCommon(diskinfo);
+            }
         }
 
         private void ButtonWrite_Click(object sender, RoutedEventArgs e)
         {
-
+            MessageBox.Show("Not supported yet");
         }
 
         private void setEnable(bool newEnableState)
