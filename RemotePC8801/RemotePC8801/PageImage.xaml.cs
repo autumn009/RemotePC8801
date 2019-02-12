@@ -40,7 +40,7 @@ namespace RemotePC8801
         }
         private void setStatus(int drive, DiskFormats format, int sur,int trk, int sec)
         {
-            TextBlockStatus.Text = string.Format("DRIVE:{0} FORMAT:{1} SURFACE:{2} TRACK:{3:D2} SECTOR;{4:D2}", drive, format, sur, trk, sec);
+            TextBlockStatus.Text = string.Format("DRIVE:{0} FORMAT:{1} SURFACE:{2} TRACK:{3:D2} SECTOR:{4:D2}", drive, format, sur, trk, sec);
         }
 
         private async void ImageRead_Click(object sender, RoutedEventArgs e)

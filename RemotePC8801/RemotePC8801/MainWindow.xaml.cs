@@ -1,4 +1,4 @@
-﻿#define BENCHMARK
+﻿//#define BENCHMARK
 
 using System;
 using System.Collections.Generic;
@@ -394,25 +394,13 @@ namespace RemotePC8801
             if (diff.Seconds > 0) rate = 256.0f * 10.0f / diff.Seconds;
             MessageBox.Show("Time was " + diff.ToString() + " Rate was " + rate + "bps");
 #else
-
-            using (var lck = new LockForm())
+            for (int i = 0; i < 100; i++)
             {
-                await Util.SendCommandAsyncAndErrorHandle("ABC:", true);
-
-#if false
-            await Task.Run(async () =>
-            {
-                for (int i = 0; i < 20; i++)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        portOutput("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-
-                    });
-                    await Task.Delay(1000);
-                }
-            });
-#endif
+                AppendLog(i.ToString());
+                //await Util.SendCommandAsyncAndErrorHandle("d$=dski$(1,0,1,1)", true);
+                //if (await Util.SendCommandAsyncAndErrorHandle("d$=space$(255)", true)) return;
+                //if (await Util.SendCommandAsyncAndErrorHandle("d=123", true)) return;
+                if (await Util.SendCommandAsyncAndErrorHandle("lset d$=space$(255)", true)) return;
             }
 #endif
         }

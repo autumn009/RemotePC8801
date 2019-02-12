@@ -173,7 +173,7 @@ namespace RemotePC8801
         internal static async Task<byte[]> SectorRead(int drive, int surface, int track, int sector)
         {
             Util.MyMainWindow.BlockReadRequest(256);
-            if (await Util.SendCommandAsyncAndErrorHandle($"FIELD #0,128 as a$, 128 as b$:DUMMY$=DSKI$({drive},{surface},{track},{sector})" + Const.SectorReadStatements, true)) return null;
+            if (await Util.SendCommandAsyncAndErrorHandle($"FIELD #0,128 as a$, 128 as b$:LSET DUMMY$=DSKI$({drive},{surface},{track},{sector})" + Const.SectorReadStatements, true)) return null;
             return Util.MyMainWindow.blockReadBuffer;
         }
     }
