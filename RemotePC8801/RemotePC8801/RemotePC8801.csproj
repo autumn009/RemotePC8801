@@ -59,6 +59,9 @@
     <Compile Include="PageDiskInfo.xaml.cs">
       <DependentUpon>PageDiskInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PageImage.xaml.cs">
+      <DependentUpon>PageImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Util.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -77,6 +80,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PageDiskInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PageImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

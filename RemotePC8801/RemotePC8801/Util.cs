@@ -115,12 +115,12 @@ namespace RemotePC8801
 
         internal static void ErrorPopup(string message)
         {
-            MessageBox.Show(MyMainWindow,message);
+            MessageBox.Show(MyMainWindow, message);
         }
 
         public static DiskFormats GetDiskFormatOverride()
         {
-            switch(MyMainWindow.ComboFormatSelect.SelectedIndex)
+            switch (MyMainWindow.ComboFormatSelect.SelectedIndex)
             {
                 case 1: return DiskFormats.SS35TR;
                 case 2: return DiskFormats.SS40TR;
@@ -167,7 +167,14 @@ namespace RemotePC8801
 
         internal static int GetSelectedDrive()
         {
-            return MyMainWindow.ComboDriveSelect.SelectedIndex+1;
+            return MyMainWindow.ComboDriveSelect.SelectedIndex + 1;
+        }
+
+        internal static async Task<byte[]> SectorRead(int drive, int surface, int track, int sector)
+        {
+            Util.MyMainWindow.BlockReadRequest(256);
+            if (await Util.SendCommandAsyncAndErrorHandle($"FIELD #0,128 as a$, 128 as b$:DUMMY$=DSKI$({drive},{surface},{track},{sector})" + Const.SectorReadStatements, true)) return null;
+            return Util.MyMainWindow.blockReadBuffer;
         }
     }
 

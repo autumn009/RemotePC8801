@@ -1,0 +1,29 @@
+﻿<Page x:Class="RemotePC8801.PageImage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RemotePC8801"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="PageImage">
+
+    <Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="ImageRead" Click="ImageRead_Click" Margin="2">Read PC-8801 Disk Image To Host</Button>
+                <Button x:Name="ImageWrite" Click="ImageWrite_Click"  Margin="2">Write PC-8801 Disk Image From Host</Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Default Dir:</TextBlock>
+                <TextBox x:Name="TextBoxDirectory" Width="300"></TextBox>
+                <Button x:Name="DirectorySelect" Click="DirectorySelect_Click" Margin="2">...</Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="2">STATUS:</TextBlock>
+                <TextBlock x:Name="TextBlockStatus" Margin="2" FontFamily="Courier New" HorizontalAlignment="Center">Status String Here</TextBlock>
+            </StackPanel>
+            <ProgressBar Width="400" Height="10" Minimum="0" Maximum="100" Margin="2" Value="50" x:Name="ProgressBarDefault"></ProgressBar>
+        </StackPanel>
+    </Grid>
+</Page>

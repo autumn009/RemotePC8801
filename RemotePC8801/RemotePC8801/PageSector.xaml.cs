@@ -88,9 +88,10 @@ namespace RemotePC8801
                 Util.ErrorPopup(message);
             });
             if (!valid) return;
-            Util.MyMainWindow.BlockReadRequest(256);
-            if (await Util.SendCommandAsyncAndErrorHandle($"FIELD #0,128 as a$, 128 as b$:DUMMY$=DSKI$({ComboBoxDrives.SelectedIndex + 1},{ComboBoxSurface.SelectedIndex},{track},{sector})" + Const.SectorReadStatements, true)) return;
-            var bytes = Util.MyMainWindow.blockReadBuffer;
+
+            var bytes = await Util.SectorRead(ComboBoxDrives.SelectedIndex + 1, ComboBoxSurface.SelectedIndex, track, sector);
+            if (bytes == null) return;
+
             int x = 0, y = 0;
             foreach (var item in bytes)
             {
