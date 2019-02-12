@@ -8,6 +8,13 @@ using System.Windows.Media;
 
 namespace RemotePC8801
 {
+    enum DiskFormats
+    {
+        Default,    // defalt as system
+        SS35TR,     // Single Side 35 track PC-8031 format
+        SS40TR,     // Single Side 40 track modefied PC-8031 format
+    }
+
     class DiskInfo
     {
         public int DriveNo; // 読み出したドライブ番号
@@ -23,7 +30,7 @@ namespace RemotePC8801
         public int SectorsInCluster; //6 ： 1 クラスタ 当りの セクタ 数 
         public int FATStartSector; //7 ： FAT の 開始 セクタ 番号 
         public int FATEndSector; //8 ： FAT の 終了 セクタ 番号 
-        public int NumverOfFATs; //9 ： FAT の 数 
+        public int NumberOfFATs; //9 ： FAT の 数 
         public int SectorInDiskAttr; //10 ： ディスク 属性の 入って いる セクタ 番号 
 
         internal bool VaridateParameters(int drive, int surface, int track, int sector, Action<string> errorReporter)
@@ -111,14 +118,23 @@ namespace RemotePC8801
             MessageBox.Show(MyMainWindow,message);
         }
 
+        public static DiskFormats GetDiskFormatOverride()
+        {
+            switch(MyMainWindow.ComboFormatSelect.SelectedIndex)
+            {
+                case 1: return DiskFormats.SS35TR;
+                case 2: return DiskFormats.SS40TR;
+                default: return DiskFormats.Default;
+            }
+        }
 
-        public async static Task<DiskInfo> GetDiskInf( int drive)
+        public async static Task<DiskInfo> GetDiskInf(int drive)
         {
             var info = new DiskInfo();
             info.DriveNo = drive;
-            var ten = string.Join(",",Enumerable.Range(0, 11).Select(c => $"DSKF({drive},{c})").ToArray());
-            if (await Util.SendCommandAsyncAndErrorHandle($"print \"%%%\";:WRITE DSKF({drive}),"+ten)) return null;
-            var ar = Util.MyMainWindow.StatementResultString.Split(',').Select(c=>
+            var ten = string.Join(",", Enumerable.Range(0, 11).Select(c => $"DSKF({drive},{c})").ToArray());
+            if (await Util.SendCommandAsyncAndErrorHandle($"print \"%%%\";:WRITE DSKF({drive})," + ten)) return null;
+            var ar = Util.MyMainWindow.StatementResultString.Split(',').Select(c =>
             {
                 int.TryParse(c.Trim(), out var r);
                 return r;
@@ -133,8 +149,19 @@ namespace RemotePC8801
             info.SectorsInCluster = ar[7];
             info.FATStartSector = ar[8];
             info.FATEndSector = ar[9];
-            info.NumverOfFATs = ar[10];
+            info.NumberOfFATs = ar[10];
             info.SectorInDiskAttr = ar[11];
+            switch (GetDiskFormatOverride())
+            {
+                case DiskFormats.SS35TR:
+                    info.Surfaces = 0;
+                    info.MaxTrackNo = 35 - 1;
+                    break;
+                case DiskFormats.SS40TR:
+                    info.Surfaces = 0;
+                    info.MaxTrackNo = 40 - 1;
+                    break;
+            }
             return info;
         }
 

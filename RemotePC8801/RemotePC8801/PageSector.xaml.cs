@@ -150,7 +150,7 @@ namespace RemotePC8801
                 {
                     sector = diskinfo.SectorsInTrack;
                     track--;
-                    if (track < 1)
+                    if (track < 0)
                     {
                         track = diskinfo.MaxTrackNo;
                         var surfaceno = ComboBoxSurface.SelectedIndex;
