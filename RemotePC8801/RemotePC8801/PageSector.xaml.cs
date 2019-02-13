@@ -83,13 +83,13 @@ namespace RemotePC8801
             int.TryParse(TextBoxTrack.Text, out int track);
             int.TryParse(TextBoxSector.Text, out int sector);
 
-            var valid = diskinfo.VaridateParameters(ComboBoxDrives.SelectedIndex + 1, ComboBoxSurface.SelectedIndex, track, sector, (message) =>
+            var valid = diskinfo.VaridateParameters(Util.GetSelectedDrive(), ComboBoxSurface.SelectedIndex, track, sector, (message) =>
             {
                 Util.ErrorPopup(message);
             });
             if (!valid) return;
 
-            var bytes = await Util.SectorRead(ComboBoxDrives.SelectedIndex + 1, ComboBoxSurface.SelectedIndex, track, sector);
+            var bytes = await Util.SectorRead(Util.GetSelectedDrive(), ComboBoxSurface.SelectedIndex, track, sector);
             if (bytes == null) return;
 
             int x = 0, y = 0;

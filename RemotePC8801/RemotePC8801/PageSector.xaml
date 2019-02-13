@@ -10,13 +10,6 @@
 
     <Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <TextBlock>Drive:</TextBlock>
-            <ComboBox SelectedIndex="0" Margin="2" x:Name="ComboBoxDrives">
-                <ComboBoxItem>1</ComboBoxItem>
-                <ComboBoxItem>2</ComboBoxItem>
-                <ComboBoxItem>3</ComboBoxItem>
-                <ComboBoxItem>4</ComboBoxItem>
-            </ComboBox>
             <TextBlock>Surface:</TextBlock>
             <ComboBox SelectedIndex="0" Margin="2" x:Name="ComboBoxSurface">
                 <ComboBoxItem>0</ComboBoxItem>
