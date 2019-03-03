@@ -27,6 +27,7 @@ namespace RemotePC8801
             InitializeComponent();
             ProgressBarDefault.Value = 0;
             setStatus("");
+            TextBoxDirectory.Text = Properties.Settings.Default.ImageDir;
         }
 
         private void ImageWrite_Click(object sender, RoutedEventArgs e)
@@ -86,7 +87,15 @@ namespace RemotePC8801
         }
         private void DirectorySelect_Click(object sender, RoutedEventArgs e)
         {
-
+            var dlg = new System.Windows.Forms.FolderBrowserDialog();
+            dlg.Description = "フォルダーを選択してください。";
+            dlg.SelectedPath = TextBoxDirectory.Text;
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                TextBoxDirectory.Text = dlg.SelectedPath;
+                Properties.Settings.Default.ImageDir = TextBoxDirectory.Text;
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }

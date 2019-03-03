@@ -17,7 +17,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock>Default Dir:</TextBlock>
                 <TextBox x:Name="TextBoxDirectory" Width="300"></TextBox>
-                <Button x:Name="DirectorySelect" Click="DirectorySelect_Click" Margin="2">...</Button>
+                <Button x:Name="DirectorySelect" Click="DirectorySelect_Click" Margin="2">　...　</Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="2">STATUS:</TextBlock>
