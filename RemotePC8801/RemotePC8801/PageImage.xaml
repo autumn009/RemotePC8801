@@ -19,6 +19,7 @@
                 <TextBox x:Name="TextBoxDirectory" Width="300"></TextBox>
                 <Button x:Name="DirectorySelect" Click="DirectorySelect_Click" Margin="2">　...　</Button>
             </StackPanel>
+            <CheckBox x:Name="CheckBoxAutoName" Checked="CheckBoxAutoName_Checked" Unchecked="CheckBoxAutoName_Unchecked">Generate Auto FileName (YYYYMMDDHHMMSS)</CheckBox>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="2">STATUS:</TextBlock>
                 <TextBlock x:Name="TextBlockStatus" Margin="2" FontFamily="Courier New" HorizontalAlignment="Center">Status String Here</TextBlock>

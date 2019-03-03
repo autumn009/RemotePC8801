@@ -34,5 +34,17 @@ namespace RemotePC8801.Properties {
                 this["ImageDir"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ImageAutoFileName {
+            get {
+                return ((bool)(this["ImageAutoFileName"]));
+            }
+            set {
+                this["ImageAutoFileName"] = value;
+            }
+        }
     }
 }

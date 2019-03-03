@@ -28,6 +28,7 @@ namespace RemotePC8801
             ProgressBarDefault.Value = 0;
             setStatus("");
             TextBoxDirectory.Text = Properties.Settings.Default.ImageDir;
+            CheckBoxAutoName.IsChecked = Properties.Settings.Default.ImageAutoFileName;
         }
 
         private void ImageWrite_Click(object sender, RoutedEventArgs e)
@@ -50,16 +51,25 @@ namespace RemotePC8801
             {
                 using (var lockf = new LockForm())
                 {
-                    var dialog = new SaveFileDialog();
-                    dialog.InitialDirectory = TextBoxDirectory.Text;
-                    dialog.Title = "Save Image";
-                    dialog.Filter = "Image File(*.img)|*.img|All Files(*.*)|*.*";
-                    if (dialog.ShowDialog() != true) return;
+                    string filename;
+                    if (Properties.Settings.Default.ImageAutoFileName)
+                    {
+                        filename = System.IO.Path.Combine(TextBoxDirectory.Text, DateTimeOffset.Now.ToString("yyyyMMddHHmmss") + ".img");
+                    }
+                    else
+                    {
+                        var dialog = new SaveFileDialog();
+                        dialog.InitialDirectory = TextBoxDirectory.Text;
+                        dialog.Title = "Save Image";
+                        dialog.Filter = "Image File(*.img)|*.img|All Files(*.*)|*.*";
+                        if (dialog.ShowDialog() != true) return;
+                        filename = dialog.FileName;
+                    }
                     var diskinfo = await Util.GetDiskInf(Util.GetSelectedDrive());
                     var format = Util.GetDiskFormatOverride();
                     ProgressBarDefault.Maximum = (diskinfo.Surfaces + 1) * (diskinfo.MaxTrackNo + 1) * diskinfo.SectorsInTrack;
                     ProgressBarDefault.Value = 0;
-                    using (var outputStream = File.OpenWrite(dialog.FileName))
+                    using (var outputStream = File.OpenWrite(filename))
                     {
                         for (int surface = 0; surface < diskinfo.Surfaces + 1; surface++)
                         {
@@ -76,7 +86,7 @@ namespace RemotePC8801
                             }
                         }
                     }
-                    MessageBox.Show("Done Successfully: " + dialog.FileName);
+                    MessageBox.Show("Done Successfully: " + filename);
                 }
             }
             finally
@@ -96,6 +106,18 @@ namespace RemotePC8801
                 Properties.Settings.Default.ImageDir = TextBoxDirectory.Text;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private void CheckBoxAutoName_Checked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.ImageAutoFileName = true;
+            Properties.Settings.Default.Save();
+        }
+
+        private void CheckBoxAutoName_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.ImageAutoFileName = false;
+            Properties.Settings.Default.Save();
         }
     }
 }
