@@ -104,7 +104,7 @@ namespace RemotePC8801
                             for (int i = 0; i < 164; i++)
                             {
                                 uint offset = 0;
-                                int surfaceNo = i / diskinfo.SectorsInTrack;
+                                int surfaceNo = i / (diskinfo.MaxTrackNo+1);
                                 if (surfaceNo <= diskinfo.Surfaces) offset = (uint)(headerOffset + i * bytesInTrack);
                                 outputStream.Write(offset);
                             }
