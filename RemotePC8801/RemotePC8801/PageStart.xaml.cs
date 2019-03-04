@@ -49,5 +49,34 @@ namespace RemotePC8801
                 if (await Util.SendCommandAsyncAndErrorHandle("close #1")) return;
             }
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBoxPortSelect.Items.Clear();
+            foreach (var item in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                ComboBoxPortSelect.Items.Add(item);
+            }
+            var name = Properties.Settings.Default.CurrentPortName;
+            for (int i = 0; i < ComboBoxPortSelect.Items.Count; i++)
+            {
+                if ((string)ComboBoxPortSelect.Items[i] == name)
+                {
+                    ComboBoxPortSelect.SelectedIndex = i;
+                    return;
+                }
+            }
+            if (ComboBoxPortSelect.Items.Count > 0) ComboBoxPortSelect.SelectedIndex = 0;
+        }
+
+        private void ComboBoxPortSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Util.PortName = (string)ComboBoxPortSelect.SelectedValue;
+            if (ComboBoxPortSelect.SelectedValue != null)
+            {
+                Properties.Settings.Default.CurrentPortName = Util.PortName;
+                Properties.Settings.Default.Save();
+            }
+        }
     }
 }

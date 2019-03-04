@@ -175,12 +175,16 @@ namespace RemotePC8801
             }
         }
 
-        private void portOpen()
+        private bool portOpen()
         {
+            if(Util.PortName == null)
+            {
+                MessageBox.Show("Port not selected.");
+                return false;
+            }
             try
             {
-                //　TBW
-                port = new SerialPort("COM3", 9600, Parity.None, 8, StopBits.One);
+                port = new SerialPort(Util.PortName, 9600, Parity.None, 8, StopBits.One);
                 port.Open();
                 port.DtrEnable = true;
                 port.RtsEnable = true;
@@ -193,8 +197,10 @@ namespace RemotePC8801
             {
                 port = null;
                 AppendLog(e.ToString());
+                return false;
             }
             updateOpenCloseStatus();
+            return true;
         }
 
         private void portClose()

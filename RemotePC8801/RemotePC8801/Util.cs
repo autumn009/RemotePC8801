@@ -80,6 +80,8 @@ namespace RemotePC8801
 
         public static bool IsPortOpen => MyMainWindow.IsPortOpen;
 
+        public static string PortName { get; internal set; }
+
         public static void AppendLog(string msg) => MyMainWindow?.AppendLog(msg);
 
         //public static async Task<MainWindow.ResultStatusMarker> SendCommandAsync(string statement) => await MyMainWindow?.SendCommandAsync(statement);

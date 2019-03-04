@@ -46,5 +46,17 @@ namespace RemotePC8801.Properties {
                 this["ImageAutoFileName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentPortName {
+            get {
+                return ((string)(this["CurrentPortName"]));
+            }
+            set {
+                this["CurrentPortName"] = value;
+            }
+        }
     }
 }

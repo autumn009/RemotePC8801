@@ -6,12 +6,17 @@
       xmlns:local="clr-namespace:RemotePC8801"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="PageStart">
+      Title="PageStart"
+      Loaded="Page_Loaded">
 
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" >
             <TextBlock FontSize="30">Remote PC-8801 Initial Page</TextBlock>
+            <ComboBox x:Name="ComboBoxPortSelect" SelectionChanged="ComboBoxPortSelect_SelectionChanged">
+            </ComboBox>
             <Button x:Name="AutoSave" Click="AutoSave_Click" IsEnabled="False">Auto SAVE "rem88",a</Button>
+            <TextBlock HorizontalAlignment="Center">Select 9600bps in your PC-8801 and type follow command or run "rem88".</TextBlock>
+            <TextBlock HorizontalAlignment="Center" Background="Black" Foreground="White">term "N81NNF",,8192</TextBlock>
         </StackPanel>
     </Grid>
 </Page>
