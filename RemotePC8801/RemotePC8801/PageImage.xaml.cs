@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Media;
 
 namespace RemotePC8801
 {
@@ -135,6 +136,7 @@ namespace RemotePC8801
                             }
                         }
                     }
+                    SystemSounds.Beep.Play();
                     MessageBox.Show("Done Successfully: " + filename);
                 }
             }
