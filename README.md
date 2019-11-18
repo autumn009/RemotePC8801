@@ -11,9 +11,9 @@ Extract files and copy to your local folder.
  * One RS-232C Port
 
 # How to configure
-1) Connect PC-8801 and your Windows Machine by RS-232C
-2) Set to PC-8801 as 9600bps RS-232C Connection
-3) open RemotePC8801 in Windows Machine
+1) Connect PC-8801 and your Windows machine by RS-232C
+2) Set the PC-8801's serial configuration as a 9600bps RS-232C connection
+3) open RemotePC8801 in Windows machine
 4) type "term "N81NNF",,8192[RETURN]" in PC-8801
 5) Select COM port in RemotePC8801
 
