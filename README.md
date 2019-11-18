@@ -1,5 +1,6 @@
 ﻿## RemotePC8801
 Control PC-8801 from Windows 10 by serial RS-232C port
+
 Created by Akira Kamata ©2019
 
 # How to install
@@ -21,15 +22,15 @@ Extract files and copy to your local folder.
 2) select driveX in combo-box
 
 # Commands
- * DISK INFO -Get infomations about the floppy disk by DSKF()
- * FILES     -Send FILES statement for test purpose
- * IMAGE     -Read Disk image to save D88 format file
- * SECTOR    -View Sector Dump by hexadecimal
+ * DISK INFO -Get information about the floppy disk by DSKF()
+ * FILES     -Send FILES statement for test purposes
+ * IMAGE     -Read disk image to save D88 format file
+ * SECTOR    -View sector dump in hexadecimal
  * DIRECT    -Execute any BASIC statement/command
  * DEBUG     -Don't use
  * PortOpen  -Open Connection
  * PortClose -Close Connection
 
 # Not implemented yet
-'Write Disk Image' is not implemented
-'Write Sector' is not implemented
+ * 'Write Disk Image' is not implemented
+ * 'Write Sector' is not implemented
