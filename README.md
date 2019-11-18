@@ -1,13 +1,13 @@
-﻿# RemotePC8801
-Control PC-8801 from Windows 10 by serial RS-232C Port
-Cretaed by Akira Kamata ©2019
+﻿## RemotePC8801
+Control PC-8801 from Windows 10 by serial RS-232C port
+Created by Akira Kamata ©2019
 
 # How to install
-Extract Files and copy your local folder.
+Extract files and copy to your local folder.
 
 # Environment
-.NET Framewrk 4.7.2
-One RS-232C Port
+ * .NET Framework 4.7.2
+ * One RS-232C Port
 
 # How to configure
 1) Connect PC-8801 and your Windows Machine by RS-232C
@@ -30,6 +30,6 @@ DEBUG     -Don't use
 PortOpen  -Open Connection
 PortClose -Close Connection
 
-# Not implememted Yet
+# Not implemented yet
 'Write Disk Image' is not implemented
 'Write Sector' is not implemented
