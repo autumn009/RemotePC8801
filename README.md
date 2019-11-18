@@ -21,14 +21,14 @@ Extract files and copy to your local folder.
 2) select driveX in combo-box
 
 # Commands
-DISK INFO -Get infomations about the floppy disk by DSKF()
-FILES     -Send FILES statement for test purpose
-IMAGE     -Read Disk image to save D88 format file
-SECTOR    -View Sector Dump by hexadecimal
-DIRECT    -Excecute any BASIC statement/command
-DEBUG     -Don't use
-PortOpen  -Open Connection
-PortClose -Close Connection
+ * DISK INFO -Get infomations about the floppy disk by DSKF()
+ * FILES     -Send FILES statement for test purpose
+ * IMAGE     -Read Disk image to save D88 format file
+ * SECTOR    -View Sector Dump by hexadecimal
+ * DIRECT    -Execute any BASIC statement/command
+ * DEBUG     -Don't use
+ * PortOpen  -Open Connection
+ * PortClose -Close Connection
 
 # Not implemented yet
 'Write Disk Image' is not implemented
